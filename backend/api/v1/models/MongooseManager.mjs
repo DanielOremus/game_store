@@ -53,8 +53,6 @@ class MongooseManager {
     }
   }
   async create(itemObj) {
-    console.log(this.model)
-
     try {
       const item = new this.model(itemObj)
       return await item.save()

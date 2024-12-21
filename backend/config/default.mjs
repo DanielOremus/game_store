@@ -10,5 +10,11 @@ export default Object.freeze({
   session: {
     secret: process.env.SESSION_SECRET,
   },
+  email: {
+    user: process.env.EMAIL_USER,
+    senderName: process.env.EMAIL_SENDER,
+    password: process.env.EMAIL_PASSWORD,
+  },
+  baseUrl: process.env.BASE_URL,
   port: process.env.PORT,
 })

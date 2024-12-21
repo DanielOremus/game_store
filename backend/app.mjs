@@ -3,13 +3,10 @@ import errorHandler from "./middlewares/errorHandler.mjs"
 import routes from "./api/v1/routes/index.mjs"
 import init from "./middlewares/init.mjs"
 import connectDB from "./db/connectDB.mjs"
-import RoleManager from "./api/v1/models/role/RoleManager.mjs"
-
 const app = express()
 
 //Connecting to DB
 connectDB()
-
 //Initialization
 init(app)
 //Routes

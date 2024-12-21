@@ -1,3 +1,4 @@
+import passport from "passport"
 import { destroySession, logoutAsync } from "../../../utils/auth.mjs"
 import RoleManager from "../models/role/RoleManager.mjs"
 import UserManager from "../models/user/UserManager.mjs"
@@ -69,25 +70,25 @@ class UserController {
     }
   }
   static async updateProfileById(req, res) {
+    //TODO: add role update
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
 
-    const { email, firstName, lastName, password } = req.body
+    const { firstName, lastName, roleId } = req.body
     let user = null
     const id = req.params.id
 
     try {
-      user = await UserManager.findById(id)
+      user = await UserManager.findById(id, {}, ["role"])
       if (!user) {
         return res.status(404).json({ success: false, msg: "User not found" })
       }
+
       user = await UserManager.updateById(id, {
-        email,
         firstName,
         lastName,
-        password,
       })
       const userResponse = user.toObject()
       delete userResponse.password
@@ -111,6 +112,35 @@ class UserController {
         return res.json({ success: true, msg: "Your profile was deleted" })
       }
       res.json({ success: true, msg: "User was successfully deleted" })
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message })
+    }
+  }
+  //Updating password when user is authorized
+  static async updateProfilePasswordById(req, res) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      console.log(errors)
+
+      return res.status(400).json({ success: false, errors: errors.array() })
+    }
+    const { oldPassword, newPassword } = req.body
+    const userId = req.params.userId
+    try {
+      const user = await UserManager.findById(userId)
+      if (!user) {
+        return res.status(404).json({ success: false, msg: "User not found" })
+      }
+      const isMatch = await user.validatePassword(oldPassword)
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ success: false, msg: "Current password is incorrect" })
+      }
+      await UserManager.updateById(userId, {
+        password: newPassword,
+      })
+      res.json({ success: true, msg: "Password was successfully changed" })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
     }

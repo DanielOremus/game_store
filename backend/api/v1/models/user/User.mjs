@@ -1,5 +1,7 @@
 import mongoose, { Schema } from "mongoose"
 import bcrypt from "bcryptjs"
+import ResetTokenManager from "../resetToken/ResetTokenManager.mjs"
+import ResetToken from "../resetToken/ResetToken.mjs"
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -11,18 +13,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "First name is required"],
     trim: true,
-    maxLength: [15, "First name must be at most 15 chars long"],
+    minLength: [3, "First name must be at least 3 chars long"],
+    maxLength: [10, "First name must be at most 10 chars long"],
   },
   lastName: {
     type: String,
     required: [true, "Last name is required"],
     trim: true,
+    minLength: [3, "Last name must be at least 3 chars long"],
     maxLength: [15, "Last name must be at most 15 chars long"],
   },
   password: {
     type: String,
     required: [true, "Password is required"],
-    select: false,
   },
   role: {
     type: Schema.Types.ObjectId,
@@ -47,6 +50,15 @@ userSchema.pre("findOneAndUpdate", async function (next) {
   next()
 })
 
+userSchema.post("findOneAndDelete", async function (doc) {
+  try {
+    //TODO: add method to manager
+    await ResetToken.findOneAndDelete({ userId: doc._id })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 userSchema.statics.hashPassword = async function (password, saltRounds = 10) {
   const salt = await bcrypt.genSalt(saltRounds)
   return await bcrypt.hash(password, salt)
@@ -54,6 +66,8 @@ userSchema.statics.hashPassword = async function (password, saltRounds = 10) {
 
 userSchema.methods.validatePassword = async function (userPassword) {
   try {
+    console.log(userPassword)
+
     return await bcrypt.compare(userPassword, this.password)
   } catch (error) {
     console.log(error)

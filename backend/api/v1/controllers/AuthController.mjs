@@ -3,16 +3,21 @@ import { validationResult } from "express-validator"
 import RoleManager from "../models/role/RoleManager.mjs"
 import passport from "../../../config/passport.mjs"
 import { logoutAsync } from "../../../utils/auth.mjs"
+import crypto from "crypto"
+import ResetTokenManager from "../models/resetToken/ResetTokenManager.mjs"
+import config from "../../../config/default.mjs"
+import sendEmail from "../../../utils/sendEmail.mjs"
+import ejs from "ejs"
 
 class AuthController {
   static async signup(req, res) {
-    // const errors = validationResult(req)
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     errors: errors.array(),
-    //   })
-    // }
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array(),
+      })
+    }
     const { email, firstName, lastName, password } = req.body
     try {
       const guestRole = await RoleManager.findOne(
@@ -30,7 +35,7 @@ class AuthController {
       req.login(user, (err) => {
         if (err)
           return res.status(500).json({ success: false, msg: err.message })
-        res.json({
+        res.status(201).json({
           success: true,
           data: {
             user: { id: user._id, fullName: user.fullName },
@@ -95,6 +100,63 @@ class AuthController {
         success: false,
         msg: error.message,
       })
+    }
+  }
+
+  static async generateResetToken(req, res) {
+    //TODO: change link for frontend link
+    const { email } = req.body
+    try {
+      const user = await UserManager.findOne({ email: { $eq: email } })
+      if (!user)
+        return res.status(404).json({ success: false, msg: "User not found" })
+      let resetToken = await ResetTokenManager.findOne(
+        { userId: user._id },
+        {},
+        []
+      )
+
+      if (!resetToken) {
+        resetToken = await ResetTokenManager.create({
+          userId: user._id,
+          token: crypto.randomBytes(32).toString("hex"),
+        })
+      }
+      const resetLink = `${config.baseUrl}/auth/${user.id}/${resetToken.token}`
+      const letterContent = await ejs.renderFile("views/resetPassword.ejs", {
+        firstName: user.firstName,
+        link: resetLink,
+        date: new Date().toUTCString(),
+      })
+      await sendEmail(email, "Password reset", letterContent)
+      res.json({ success: true, msg: "Email was sent successfully" })
+    } catch (error) {
+      console.log(error)
+
+      res.status(500).json({ success: false, msg: error.message })
+    }
+  }
+
+  static async resetPassword(req, res) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() })
+    }
+    const { userId, tokenId } = req.params
+    const { newPassword } = req.body
+    try {
+      const token = await ResetTokenManager.findOne({
+        userId: { $eq: userId },
+        token: { $eq: tokenId },
+      })
+      if (!token)
+        return res
+          .status(400)
+          .json({ success: false, msg: "Invalid link or expired" })
+      await UserManager.updateById(userId, { password: newPassword })
+      res.json({ success: true, msg: "Password has been changed successfully" })
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message })
     }
   }
 }

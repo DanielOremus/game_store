@@ -1,17 +1,29 @@
 import { Router } from "express"
 import UserController from "../controllers/UserController.mjs"
-const router = Router()
 import {
   ensureAuthenticated,
   getPermissionChecker,
   conditionalUserScope,
 } from "../../../middlewares/auth.mjs"
+import { checkSchema } from "express-validator"
+import UserValidator from "../validators/UserValidator.mjs"
 
 const checkPermission = getPermissionChecker("users")
+
+const router = Router()
 
 router.use(ensureAuthenticated)
 
 router.get("/", checkPermission("read"), UserController.getAllProfiles)
+
+router.post(
+  "/:userId/update-password",
+  //TODO: Carry out to separate file
+  conditionalUserScope,
+  checkPermission("update"),
+  checkSchema(UserValidator.updatePasswordSchema),
+  UserController.updateProfilePasswordById
+)
 
 router.get(
   "/:id",
@@ -20,11 +32,17 @@ router.get(
   UserController.getProfileById
 )
 //Creating profile by admin
-router.post("/create", checkPermission("create"), UserController.createProfile)
+router.post(
+  "/create",
+  checkPermission("create"),
+  checkSchema(UserValidator.createUserSchema),
+  UserController.createProfile
+)
 
 router.put(
   "/update/:id",
   checkPermission("update"),
+  checkSchema(UserValidator.updateUserSchema),
   UserController.updateProfileById
 )
 
