@@ -16,9 +16,11 @@ export default {
       console.log(data.pagesPermissions)
 
       state.permissions = data.pagesPermissions
+      localStorage.setItem("permissions", data.pagePermissions)
     },
     clearPermissions(state) {
       state.permissions = {}
+      localStorage.removeItem("permissions")
     },
   },
   actions: {

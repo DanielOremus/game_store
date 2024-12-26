@@ -31,9 +31,9 @@ export default (app) => {
   app.use("/uploads/", express.static(path.join(__dirname, "../uploads")))
 
   //Session + Cookies + Passport
-  app.use(sessionConfig)
-  app.use(passport.initialize())
-  app.use(passport.session())
+  // app.use(sessionConfig)
+  // app.use(passport.initialize())
+  // app.use(passport.session())
 
   //Cors
   app.use(

@@ -10,6 +10,7 @@ export default [
     path: "/auth",
     component: AuthPage,
     redirect: { name: "Login" },
+    meta: { requiresNotAuth: true },
     children: [
       {
         path: "login",

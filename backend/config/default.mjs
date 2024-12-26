@@ -10,6 +10,9 @@ export default Object.freeze({
   session: {
     secret: process.env.SESSION_SECRET,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+  },
   email: {
     user: process.env.EMAIL_USER,
     senderName: process.env.EMAIL_SENDER,

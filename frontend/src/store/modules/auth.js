@@ -1,5 +1,6 @@
 import axios from "axios"
 import apiEndpoints from "../../../api/apiEndpoints"
+import Cookies from "js-cookie"
 export default {
   namespaced: true,
   state: () => ({
@@ -24,8 +25,6 @@ export default {
     },
     setAuthenticatedStatus(state, status) {
       state.isAuthenticated = status
-      if (status) localStorage.setItem("isAuthenticated", true)
-      else localStorage.setItem("isAuthenticated", false)
     },
   },
 
@@ -131,28 +130,22 @@ export default {
         throw error
       }
     },
-    // async checkAuth({ commit }) {
-    //   const localAuthStatus = localStorage.getItem("isAuthenticated")
-
-    //   try {
-    //     if (localAuthStatus) {
-    //       const response = await axios.get(apiEndpoints.auth.checkAuth, {
-    //         withCredentials: true,
-    //         validateStatus: (status) => status < 500,
-    //       })
-    //       const resData = response.data
-    //       if (resData.success) {
-    //         commit("setAuthenticatedStatus", true)
-    //       } else {
-    //         commit("setAuthenticatedStatus", false)
-    //       }
-    //     } else {
-    //       commit("setAuthenticatedStatus", false)
-    //     }
-    //   } catch (error) {
-    //     console.log("Error while checking auth status")
-    //     commit("setAuthenticatedStatus", false)
-    //   }
-    // },
+    async checkAuthStatus({ commit }) {
+      try {
+        const response = await axios.get(apiEndpoints.auth.checkAuth, {
+          withCredentials: true,
+          validateStatus: (status) => status < 500,
+        })
+        const resData = response.data
+        if (resData.success) {
+          commit("setAuthenticatedStatus", true)
+        } else {
+          commit("setAuthenticatedStatus", false)
+        }
+      } catch (error) {
+        console.log("Error while checking auth status")
+        commit("setAuthenticatedStatus", false)
+      }
+    },
   },
 }

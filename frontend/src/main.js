@@ -21,4 +21,6 @@ const vuetify = createVuetify({
   },
 })
 
+store.dispatch("auth/checkAuthStatus")
+
 createApp(App).use(vuetify).use(router).use(store).mount("#app")
