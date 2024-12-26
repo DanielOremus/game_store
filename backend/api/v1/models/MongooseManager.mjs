@@ -13,7 +13,7 @@ class MongooseManager {
       }
     }
   }
-  async findMany(filters, projection, options, populateFields) {
+  async findMany(filters, projection = {}, options = {}, populateFields = []) {
     try {
       const query = this.model.find(filters, projection, options)
       const count = await this.model.countDocuments(query)
@@ -30,7 +30,7 @@ class MongooseManager {
     }
   }
   async findManyWithQuery(reqQuery, projection, fieldsConfiguration) {}
-  async findById(id, projection, populateFields) {
+  async findById(id, projection = {}, populateFields = []) {
     try {
       const query = this.model.findById(id, projection)
       this.addPopulation(query, populateFields)
@@ -40,7 +40,7 @@ class MongooseManager {
       throw new Error("Error fetching item by id: " + error.message)
     }
   }
-  async findOne(filters, projection, populateFields) {
+  async findOne(filters, projection = {}, populateFields = []) {
     try {
       console.log(populateFields)
 
@@ -65,6 +65,13 @@ class MongooseManager {
       return await this.model.findByIdAndDelete(id)
     } catch (error) {
       throw new Error("Error deleting item by id: " + error.message)
+    }
+  }
+  async deleteOne(filters) {
+    try {
+      return this.model.findOneAndDelete(filters)
+    } catch (error) {
+      throw new Error("Error deleting item by filters: " + error.message)
     }
   }
   async updateById(id, itemObj) {

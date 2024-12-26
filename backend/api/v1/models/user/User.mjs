@@ -66,8 +66,6 @@ userSchema.statics.hashPassword = async function (password, saltRounds = 10) {
 
 userSchema.methods.validatePassword = async function (userPassword) {
   try {
-    console.log(userPassword)
-
     return await bcrypt.compare(userPassword, this.password)
   } catch (error) {
     console.log(error)

@@ -18,7 +18,6 @@ router.get("/", checkPermission("read"), UserController.getAllProfiles)
 
 router.post(
   "/:userId/update-password",
-  //TODO: Carry out to separate file
   conditionalUserScope,
   checkPermission("update"),
   checkSchema(UserValidator.updatePasswordSchema),

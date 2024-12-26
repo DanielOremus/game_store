@@ -120,8 +120,6 @@ class UserController {
   static async updateProfilePasswordById(req, res) {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      console.log(errors)
-
       return res.status(400).json({ success: false, errors: errors.array() })
     }
     const { oldPassword, newPassword } = req.body

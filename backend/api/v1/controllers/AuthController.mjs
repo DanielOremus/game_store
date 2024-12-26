@@ -10,6 +10,14 @@ import sendEmail from "../../../utils/sendEmail.mjs"
 import ejs from "ejs"
 
 class AuthController {
+  static isAuthenticated(req, res) {
+    return req.isAuthenticated()
+      ? res.json({ success: true, msg: "User is authenticated" })
+      : res
+          .status(401)
+          .json({ success: false, msg: "User is not authenticated" })
+  }
+
   static async signup(req, res) {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -24,6 +32,7 @@ class AuthController {
         { title: "Guest" },
         { _id: 1 }
       )
+      console.log(password)
 
       const user = await UserManager.create({
         email,
@@ -61,7 +70,7 @@ class AuthController {
     passport.authenticate("local", (err, user, info) => {
       if (err) return res.status(500).json({ success: false, msg: err.message })
       if (!user)
-        return res.status(400).json({ success: false, msg: info.message })
+        return res.status(401).json({ success: false, msg: info.message })
       req.login(user, (err) => {
         if (err)
           return res.status(500).json({ success: false, msg: err.message })
@@ -75,9 +84,11 @@ class AuthController {
     })(req, res)
   }
   static async getPagesPermissions(req, res) {
+    const userId = req.params.id
     try {
-      const user = await UserManager.findById(req.user._id, {}, ["role"])
-
+      const user = await UserManager.findById(userId, {}, ["role"])
+      if (!user)
+        return res.status(404).json({ success: false, msg: "User not found" })
       res.json({
         success: true,
         data: {
@@ -109,12 +120,10 @@ class AuthController {
     try {
       const user = await UserManager.findOne({ email: { $eq: email } })
       if (!user)
-        return res.status(404).json({ success: false, msg: "User not found" })
-      let resetToken = await ResetTokenManager.findOne(
-        { userId: user._id },
-        {},
-        []
-      )
+        return res
+          .status(404)
+          .json({ success: false, msg: "User by email not found" })
+      let resetToken = await ResetTokenManager.findOne({ userId: user._id })
 
       if (!resetToken) {
         resetToken = await ResetTokenManager.create({
@@ -122,7 +131,7 @@ class AuthController {
           token: crypto.randomBytes(32).toString("hex"),
         })
       }
-      const resetLink = `${config.baseUrl}/auth/${user.id}/${resetToken.token}`
+      const resetLink = `${config.baseUrl}/auth/reset-password/${user.id}/${resetToken.token}`
       const letterContent = await ejs.renderFile("views/resetPassword.ejs", {
         firstName: user.firstName,
         link: resetLink,
@@ -137,23 +146,43 @@ class AuthController {
     }
   }
 
+  static async validateResetToken(req, res) {
+    const { userId, token } = req.params
+
+    try {
+      const exists = await ResetTokenManager.findOne({
+        userId: { $eq: userId },
+        token: { $eq: token },
+      })
+      if (!exists)
+        return res
+          .status(400)
+          .json({ success: false, msg: "Invalid or expired token" })
+      res.json({ success: true, msg: "Token is valid" })
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message })
+    }
+  }
+
   static async resetPassword(req, res) {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
-    const { userId, tokenId } = req.params
+    const { userId, token } = req.params
     const { newPassword } = req.body
     try {
-      const token = await ResetTokenManager.findOne({
+      const exists = await ResetTokenManager.findOne({
         userId: { $eq: userId },
-        token: { $eq: tokenId },
+        token: { $eq: token },
       })
-      if (!token)
+      if (!exists)
         return res
           .status(400)
           .json({ success: false, msg: "Invalid link or expired" })
+
       await UserManager.updateById(userId, { password: newPassword })
+      await ResetTokenManager.deleteOne({ token: { $eq: token } })
       res.json({ success: true, msg: "Password has been changed successfully" })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })

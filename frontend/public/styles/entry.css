@@ -1,0 +1,73 @@
+.login-separator {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.login-label {
+  background-color: #212121;
+  padding: 0 1rem;
+  z-index: 1;
+}
+.login-separator::after {
+  content: "";
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  height: 1px;
+  position: absolute;
+  background-color: grey;
+
+  width: 100%;
+}
+
+.actions:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.form {
+  width: 50%;
+  .input {
+    margin-bottom: 1rem;
+    min-width: 100%;
+  }
+}
+
+:deep(.v-btn__overlay) {
+  background-color: black;
+}
+:deep(.v-btn--disabled .v-btn__overlay) {
+  opacity: 0.3;
+}
+
+:deep(.v-text-field input) {
+  font-size: 1.3rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .form {
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 850px) {
+  .form {
+    width: 70%;
+  }
+}
+
+@media only screen and (min-width: 850px) and (max-width: 960px) {
+  .form {
+    width: 90%;
+  }
+}
+
+@media only screen and (min-width: 960px) and (max-width: 1264px) {
+  .form {
+    width: 70%;
+  }
+}
+@media only screen and (min-width: 1264px) and (max-width: 1904px) {
+  .form {
+    width: 60%;
+  }
+}

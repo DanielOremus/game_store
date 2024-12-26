@@ -2,14 +2,14 @@ class AuthValidator {
   static loginSchema = {
     email: {
       trim: true,
-      isEmpty: {
+      notEmpty: {
         errorMessage: "Email is required",
       },
       normalizeEmail: true,
     },
     password: {
       trim: true,
-      isEmpty: {
+      notEmpty: {
         errorMessage: "Password is required",
       },
       escape: true,

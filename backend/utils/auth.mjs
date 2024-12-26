@@ -22,4 +22,3 @@ export const login = (req, user) => {
     })
   })
 }
-export const authenticateLocal = (req) => {}

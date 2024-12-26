@@ -20,6 +20,15 @@ export function ensureAuthenticated(req, res, next) {
     return res.status(401).json({ success: false, msg: "Unauthorized" })
   next()
 }
+
+export function ensureNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated())
+    return res
+      .status(409)
+      .json({ success: false, msg: "Already authenticated" })
+  next()
+}
+
 export function conditionalUserScope(req, res, next) {
   const id = req.params.id
   if (id === req.user._id.toString()) req.skipPermissionCheck = true
