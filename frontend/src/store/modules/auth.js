@@ -25,7 +25,7 @@ export default {
     setAuthenticatedStatus(state, status) {
       state.isAuthenticated = status
       if (status) localStorage.setItem("isAuthenticated", true)
-      else localStorage.removeItem("isAuthenticated")
+      else localStorage.setItem("isAuthenticated", false)
     },
   },
 
