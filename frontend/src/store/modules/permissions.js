@@ -4,21 +4,25 @@ import apiEndpoints from "../../../api/apiEndpoints"
 export default {
   namespaced: true,
   state: () => ({
-    permissions: {},
+    permissions: null,
   }),
   getters: {
     pagePermissions(state) {
-      return state.permissions
+      const permissions = state.permissions
+      //   || JSON.parse(localStorage.getItem("permissions"))
+      // console.log(permissions)
+
+      return permissions
     },
   },
   mutations: {
     setPermissions(state, data) {
-      console.log(data.pagesPermissions)
-
       state.permissions = data.pagesPermissions
+      // localStorage.setItem("permissions", JSON.stringify(data.pagesPermissions))
     },
     clearPermissions(state) {
       state.permissions = {}
+      localStorage.removeItem("permissions")
     },
   },
   actions: {
@@ -39,6 +43,9 @@ export default {
         console.log("Something went wrong")
         console.log(error)
       }
+    },
+    clearPermissions({ commit }) {
+      commit("clearPermissions")
     },
   },
 }

@@ -1,11 +1,21 @@
+@font-face {
+  font-family: "Noto Sans Display";
+  src: url("@/assets/fonts/NotoSansDisplay-VariableFont.ttf");
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  --main-text-color: rgb(214, 214, 214);
+}
+
 body {
-  overflow-x: hidden;
+  font-family: "Noto Sans Display";
+  font-optical-sizing: auto;
+  font-style: normal;
   margin: 0;
   display: flex;
   min-height: 100vh;
@@ -13,4 +23,6 @@ body {
 
 #app {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }

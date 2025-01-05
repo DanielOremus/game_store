@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router"
 import authRoutes from "./routes/auth"
+import gameRoutes from "./routes/game"
 import HomePage from "@/views/HomePage.vue"
 import store from "@/store"
+
+const isAuthenticated = () => store.getters["auth/isAuthenticated"]
 
 const routes = [
   {
@@ -9,6 +12,10 @@ const routes = [
     name: "HomePage",
     component: HomePage,
     meta: { pageTitle: "GameStore" },
+  },
+  {
+    path: "/:category",
+    name: "",
   },
   {
     path: "/:pathMatch(.*)*",
@@ -19,6 +26,7 @@ const routes = [
     },
   },
   ...authRoutes,
+  ...gameRoutes,
 ]
 
 const router = createRouter({
@@ -26,24 +34,27 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from, next) => {
-  const title = to.meta.pageTitle
+router.beforeEach(async (to, from) => {
+  const title = to.meta.pageTitle || "GameStore"
   document.title = title
 
   if (to.meta.requiresAuth) {
-    const isAuthenticated = () => store.getters["auth/isAuthenticated"]
-    if (!isAuthenticated()) {
-      try {
-        await store.dispatch("auth/checkAuth")
-      } catch (error) {
-        console.log("Error while checking auth status", error)
-      }
+    if (isAuthenticated()) return true
+    return router.push({ name: "Login" })
+  }
+  if (to.meta.requiresNotAuth) {
+    if (!isAuthenticated()) return true
+    return router.push({ name: "HomePage" })
+  }
 
-      if (isAuthenticated()) next()
-      else next({ name: "Login" })
-    }
-  } else {
-    next()
+  const pagePermissions = JSON.parse(
+    JSON.stringify(store.getters["permissions/pagePermissions"])
+  )
+
+  if (
+    pagePermissions?.[to.meta.pageCategory]?.[to.meta.pagePermission] === false
+  ) {
+    return router.push({ name: "NotFound" })
   }
 })
 

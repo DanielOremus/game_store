@@ -23,6 +23,7 @@ router.get(
   checkPermission("roles"),
   AuthController.getPagesPermissions
 )
+router.get("/get-guest-permissions", AuthController.getPagesPermissions)
 
 router.get("/validate-token/:userId/:token", AuthController.validateResetToken)
 

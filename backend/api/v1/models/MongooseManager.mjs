@@ -1,3 +1,5 @@
+import SelectionHelper from "../../../utils/selectionHelpers/SelectionHelper.mjs"
+
 class MongooseManager {
   constructor(model) {
     this.model = model
@@ -21,6 +23,8 @@ class MongooseManager {
       this.addPopulation(query, populateFields)
 
       const documents = await query.exec()
+      console.log(documents)
+
       return {
         documents,
         count,
@@ -29,7 +33,37 @@ class MongooseManager {
       throw new Error("Error fetching data: ", +error.message)
     }
   }
-  async findManyWithQuery(reqQuery, projection, fieldsConfiguration) {}
+  async findManyWithQuery(
+    reqQuery,
+    projection,
+    fieldsConfig,
+    customFiltersConfig = {},
+    populateFields
+  ) {
+    try {
+      console.log(this.model)
+
+      let query = this.model.find({}, projection)
+      query = SelectionHelper.applyFiltersSelection(
+        reqQuery,
+        fieldsConfig,
+        query,
+        customFiltersConfig
+      )
+      const count = await this.model.countDocuments(query)
+
+      query = SelectionHelper.applyActionsSelection(reqQuery, query)
+
+      this.addPopulation(query, populateFields)
+
+      const documents = await query.exec()
+      console.log(documents)
+
+      return { documents, count }
+    } catch (error) {
+      throw new Error("Error fetching data with query: " + error.message)
+    }
+  }
   async findById(id, projection = {}, populateFields = []) {
     try {
       const query = this.model.findById(id, projection)

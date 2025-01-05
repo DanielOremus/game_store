@@ -18,7 +18,7 @@ export default {
   props: {
     imgSrc: {
       type: String,
-      default: "/auth-page-image.png",
+      default: "/backgrounds/auth-page-image.png",
     },
   },
 }

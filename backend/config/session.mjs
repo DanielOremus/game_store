@@ -6,7 +6,6 @@ export default session({
   store: MongoStore.create({
     mongoUrl: config.db.mongoURI,
     collectionName: "sessions",
-    ttl: 60 * 60 * 24 * 3, // 3 days,
     autoRemove: "native",
   }),
   cookie: {

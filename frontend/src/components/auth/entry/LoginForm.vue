@@ -137,7 +137,7 @@ export default {
         }, 3000)
       } catch (error) {
         const response = error.response
-        switch (response.status) {
+        switch (response?.status) {
           case 401:
             this.password.value = ""
             this.showAlert("error", "Oops", response.data.msg)

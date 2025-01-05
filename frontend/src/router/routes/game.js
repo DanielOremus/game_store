@@ -1,0 +1,36 @@
+export default [
+  {
+    path: "/games",
+    meta: {
+      pageCategory: "games",
+      pagePermission: "read",
+    },
+  },
+  {
+    path: "/games/:id",
+    name: "SpecificGame",
+    component: () => import("@/views/game/SpecificPage.vue"),
+    meta: {
+      pageCategory: "games",
+      pagePermission: "read",
+    },
+  },
+  {
+    path: "/games/:id/update",
+    name: "UpdateGame",
+    component: () => import("@/views/game/FormPage.vue"),
+    meta: {
+      pageCategory: "games",
+      pagePermission: "update",
+    },
+  },
+  {
+    path: "/games/create",
+    name: "CreateGame",
+    component: () => import("@/views/game/FormPage.vue"),
+    meta: {
+      pageCategory: "games",
+      pagePermission: "create",
+    },
+  },
+]

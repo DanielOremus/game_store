@@ -17,12 +17,13 @@
       email with a reset link. Check your spam box if you didn't receive it. In
       case of any complications, please contact us : gamestore.by.do@gmail.com.
     </v-card-text>
-    <v-form @submit.prevent="onSend">
+    <v-form @submit.prevent="onSend" ref="formElement" v-model="form">
       <v-text-field
         color="orange-darken-3"
         variant="outlined"
         placeholder="Your email"
-        v-model="email"
+        :rules="email.rules"
+        v-model="email.value"
       >
       </v-text-field>
       <v-btn
@@ -31,6 +32,7 @@
         color="orange-darken-3"
         type="submit"
         class="mt-2"
+        :disabled="isBtnDisabled"
         >Send</v-btn
       >
     </v-form>
@@ -39,6 +41,8 @@
 
 <script>
 import { mapActions } from "vuex"
+import AuthValidator from "@/validators/AuthValidator"
+import { getFieldValidationFunc } from "@/validators/validationHelpers"
 import Alert from "@/components/alerts/Alert.vue"
 export default {
   name: "EmailForm",
@@ -47,13 +51,22 @@ export default {
   },
   data() {
     return {
-      email: "",
+      form: false,
+      email: {
+        value: "",
+        rules: [getFieldValidationFunc(AuthValidator.registerSchema, "email")],
+      },
       alert: {
         type: "success",
         text: "Letter was sent successfully!",
         title: "Success",
       },
     }
+  },
+  computed: {
+    isBtnDisabled() {
+      return !this.form
+    },
   },
   methods: {
     ...mapActions("auth", ["sendResetLink"]),
@@ -68,7 +81,7 @@ export default {
     async onSend() {
       //TODO: Add email validator
       try {
-        await this.sendResetLink(this.email)
+        await this.sendResetLink(this.email.value)
         this.showAlert()
       } catch (error) {}
     },

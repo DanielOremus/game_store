@@ -12,7 +12,14 @@ import ejs from "ejs"
 class AuthController {
   static isAuthenticated(req, res) {
     return req.isAuthenticated()
-      ? res.json({ success: true, msg: "User is authenticated" })
+      ? res.json({
+          success: true,
+          data: {
+            id: req.user._id,
+            fullName: req.user.fullName,
+          },
+          msg: "User is authenticated",
+        })
       : res
           .status(401)
           .json({ success: false, msg: "User is not authenticated" })
@@ -86,6 +93,13 @@ class AuthController {
   static async getPagesPermissions(req, res) {
     const userId = req.params.id
     try {
+      if (!userId) {
+        const guestRole = await RoleManager.findOne({ title: "Guest" })
+        return res.json({
+          success: true,
+          data: { pagesPermissions: guestRole.pagesPermissions },
+        })
+      }
       const user = await UserManager.findById(userId, {}, ["role"])
       if (!user)
         return res.status(404).json({ success: false, msg: "User not found" })

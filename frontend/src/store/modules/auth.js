@@ -10,22 +10,23 @@ export default {
   getters: {
     fullName(state) {
       return state.fullName
+      // || localStorage.getItem("fullName")
     },
     isAuthenticated(state) {
       return state.isAuthenticated
+      // || !!localStorage.getItem("isAuthenticated")
     },
   },
   mutations: {
     setAuthData(state, data) {
       state.userId = data.id
       state.fullName = data.fullName
-      localStorage.setItem("userId", data.id)
-      localStorage.setItem("fullName", data.fullName)
+      // localStorage.setItem("userId", data.id)
+      // localStorage.setItem("fullName", data.fullName)
     },
     setAuthenticatedStatus(state, status) {
       state.isAuthenticated = status
-      if (status) localStorage.setItem("isAuthenticated", true)
-      else localStorage.setItem("isAuthenticated", false)
+      // localStorage.setItem("isAuthenticated", status)
     },
   },
 
@@ -73,7 +74,7 @@ export default {
       }
     },
 
-    async logout({ commit }) {
+    async logout({ commit, dispatch }) {
       try {
         await axios.post(
           apiEndpoints.auth.logout,
@@ -83,6 +84,7 @@ export default {
 
         commit("setAuthData", { id: null, fullName: null })
         commit("setAuthenticatedStatus", false)
+        dispatch("permissions/fetchPermissions", null, { root: true })
       } catch (error) {
         console.log("Something went wrong")
 
@@ -131,28 +133,35 @@ export default {
         throw error
       }
     },
-    // async checkAuth({ commit }) {
-    //   const localAuthStatus = localStorage.getItem("isAuthenticated")
-
-    //   try {
-    //     if (localAuthStatus) {
-    //       const response = await axios.get(apiEndpoints.auth.checkAuth, {
-    //         withCredentials: true,
-    //         validateStatus: (status) => status < 500,
-    //       })
-    //       const resData = response.data
-    //       if (resData.success) {
-    //         commit("setAuthenticatedStatus", true)
-    //       } else {
-    //         commit("setAuthenticatedStatus", false)
-    //       }
-    //     } else {
-    //       commit("setAuthenticatedStatus", false)
-    //     }
-    //   } catch (error) {
-    //     console.log("Error while checking auth status")
-    //     commit("setAuthenticatedStatus", false)
-    //   }
-    // },
+    async checkAuthStatus({ commit, dispatch }) {
+      try {
+        const response = await axios.get(apiEndpoints.auth.checkAuth, {
+          withCredentials: true,
+          validateStatus: (status) => status < 500,
+        })
+        const resData = response.data
+        if (resData.success) {
+          commit("setAuthenticatedStatus", true)
+          commit("setAuthData", {
+            id: resData.data.id,
+            fullName: resData.data.fullName,
+          })
+          dispatch("permissions/fetchPermissions", resData.data.id, {
+            root: true,
+          })
+        } else {
+          commit("setAuthenticatedStatus", false)
+          commit("setAuthData", { id: null, fullName: null })
+          dispatch("permissions/fetchPermissions", null, { root: true })
+        }
+      } catch (error) {
+        console.log("Error while checking auth status")
+        commit("setAuthenticatedStatus", false)
+      }
+    },
+    syncAuthStatus({ commit }) {
+      const status = localStorage.getItem("isAuthenticated")
+      commit("setAuthenticatedStatus", !!status)
+    },
   },
 }

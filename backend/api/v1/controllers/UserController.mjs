@@ -1,4 +1,3 @@
-import passport from "passport"
 import { destroySession, logoutAsync } from "../../../utils/auth.mjs"
 import RoleManager from "../models/role/RoleManager.mjs"
 import UserManager from "../models/user/UserManager.mjs"
@@ -76,7 +75,7 @@ class UserController {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
 
-    const { firstName, lastName, roleId } = req.body
+    const { firstName, lastName, roleIds } = req.body
     let user = null
     const id = req.params.id
 

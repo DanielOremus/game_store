@@ -1,10 +1,11 @@
 class GameValidator {
   static schema = {
-    image: {
+    mainImg: {
       custom: {
         options: (v, { req }) => {
           if (req.params.id || req.file) return true
-          throw new Error("Image must be attached")
+
+          throw new Error("Main Image must be attached")
         },
       },
     },
@@ -45,7 +46,7 @@ class GameValidator {
         },
       },
     },
-    platforms: {
+    platform: {
       custom: {
         options: (v) => {
           if (typeof v === "string") return true
@@ -53,6 +54,27 @@ class GameValidator {
             if (v.length > 0) return true
           }
           throw new Error("At least 1 platform must be attached")
+        },
+      },
+    },
+    genre: {
+      custom: {
+        options: (v) => {
+          if (typeof v === "string") return true
+          if (Array.isArray(v)) {
+            if (v.length > 0) return true
+          }
+          throw new Error("At least 1 genre must be attached")
+        },
+      },
+    },
+  }
+  static gallerySchema = {
+    gallery: {
+      custom: {
+        options: (v, { req }) => {
+          if (req.files && req.files.length > 0) return true
+          throw new Error("No media files uploaded")
         },
       },
     },
