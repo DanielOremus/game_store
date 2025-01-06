@@ -25,6 +25,15 @@ export default [
     },
   },
   {
+    path: "/games/:id/update-gallery",
+    name: "UpdateGallery",
+    component: () => import("@/views/game/GalleryPage.vue"),
+    meta: {
+      pageCategory: "games",
+      pagePermission: "update",
+    },
+  },
+  {
     path: "/games/create",
     name: "CreateGame",
     component: () => import("@/views/game/FormPage.vue"),

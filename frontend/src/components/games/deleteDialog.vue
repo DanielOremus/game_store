@@ -8,7 +8,8 @@
         <v-btn
           color="primary"
           size="large"
-          prepend-icon=""
+          prepend-icon="mdi-arrow-left-bold-box"
+          class="font-weight-bold"
           @click="isActive = false"
           >No, I'm not sure</v-btn
         >
@@ -16,6 +17,7 @@
           color="red"
           size="large"
           prepend-icon="mdi-alert"
+          class="font-weight-bold"
           @click="onConfirm"
           >Yes, I'm sure</v-btn
         >

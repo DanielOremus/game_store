@@ -8,6 +8,7 @@ import * as components from "vuetify/components"
 import * as directives from "vuetify/directives"
 import { VNumberInput } from "vuetify/labs/VNumberInput"
 import { VDateInput } from "vuetify/labs/VDateInput"
+import { VFileUpload } from "vuetify/labs/VFileUpload"
 
 import "@mdi/font/css/materialdesignicons.css"
 
@@ -21,6 +22,7 @@ const vuetify = createVuetify({
     ...components,
     VNumberInput,
     VDateInput,
+    VFileUpload,
   },
   directives,
 

@@ -56,15 +56,16 @@
               </span>
               <span class="new-price"> {{ game.sale_price }}$ </span>
             </div>
-            <div class="d-flex w-75 flex-column ga-3">
+            <div class="d-flex w-75 flex-column flex-wrap ga-3">
               <v-btn color="orange-darken-3" size="large" block
                 >Add to Cart</v-btn
               >
               <div class="d-flex ga-3">
                 <v-btn
                   v-if="pagePermissions?.games.update"
-                  class="flex-grow-1"
                   color="blue-darken-3"
+                  class="flex-fill"
+                  prepend-icon="mdi-update"
                   size="large"
                   @click="
                     $router.push({
@@ -76,8 +77,24 @@
                 >
 
                 <v-btn
+                  v-if="pagePermissions?.games.update"
+                  prepend-icon="mdi-image-edit"
+                  class="flex-fill"
+                  color="grey-darken-3"
+                  size="large"
+                  @click="
+                    $router.push({
+                      name: 'UpdateGallery',
+                      params: { id: game._id },
+                    })
+                  "
+                  >Update Gallery</v-btn
+                >
+
+                <v-btn
                   v-if="pagePermissions?.games.delete"
-                  class="flex-grow-1"
+                  prepend-icon="mdi-delete"
+                  class="flex-fill"
                   color="error"
                   size="large"
                   @click="onDelete"
