@@ -21,6 +21,7 @@ export default Object.freeze({
     fetchGameById: (id) => `${API_URI}/games/${id}`,
     create: `${API_URI}/games/create`,
     updateGameById: (id) => `${API_URI}/games/update/${id}`,
+    updateGallery: (id) => `${API_URI}/games/update-gallery/${id}`,
     deleteGameById: (id) => `${API_URI}/games/${id}`,
   },
   platform: {

@@ -1,12 +1,12 @@
 import multer from "multer"
-
+import { v4 as uuidv4 } from "uuid"
 const diskStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/games")
   },
 
   filename: function (req, file, cb) {
-    const fileName = `${Date.now()}-${file.originalname}`
+    const fileName = `${uuidv4()}-${file.originalname}`
     cb(null, fileName)
   },
 })

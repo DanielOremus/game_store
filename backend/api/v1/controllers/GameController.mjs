@@ -126,23 +126,20 @@ class GameController {
   }
 
   static async updateGalleryByGameId(req, res) {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        errors: errors.array(),
-      })
-    }
-
     const id = req.params.id
+    console.log(req.body)
+    console.log(req.file)
+    console.log(req.files)
 
-    const galleryObjects = req.files?.map((file) => ({
+    const mediaToDelete = JSON.parse(req.body.mediaToDelete) || []
+    const mediaObjects = req.files?.map((file) => ({
       src: file.path,
       mimetype: file.mimetype,
     }))
+
     try {
-      const updateGame = await GameManager.updateById(id, {
-        $push: { gallery: { $each: galleryObjects } },
+      let updateGame = await GameManager.updateById(id, {
+        $push: { gallery: { $each: mediaObjects } },
       })
 
       if (!updateGame) {
@@ -151,9 +148,25 @@ class GameController {
           .json({ success: false, msg: "Game by id not found" })
       }
 
+      mediaToDelete.forEach((mediaId) => {
+        const mediaIndex = updateGame.gallery.findIndex(
+          (obj) => obj._id.toString() === mediaId
+        )
+        if (mediaIndex !== -1) {
+          FileManager.removeSync(updateGame.gallery[mediaIndex].src)
+        }
+      })
+
+      updateGame = await GameManager.updateById(id, {
+        $pull: { gallery: { _id: { $in: mediaToDelete } } },
+      })
+
       res.json({ success: true, game: updateGame })
     } catch (error) {
-      galleryPaths.forEach((path) => FileManager.removeSync(path))
+      console.log(error)
+
+      mediaObjects.forEach((obj) => FileManager.removeSync(obj.src))
+      console.log(error)
 
       res.status(500).json({ success: false, msg: error.message })
     }

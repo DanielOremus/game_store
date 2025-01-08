@@ -69,16 +69,6 @@ class GameValidator {
       },
     },
   }
-  static gallerySchema = {
-    gallery: {
-      custom: {
-        options: (v, { req }) => {
-          if (req.files && req.files.length > 0) return true
-          throw new Error("No media files uploaded")
-        },
-      },
-    },
-  }
 }
 
 export default GameValidator

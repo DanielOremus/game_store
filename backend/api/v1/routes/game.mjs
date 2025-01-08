@@ -31,8 +31,7 @@ router.put(
 router.put(
   "/update-gallery/:id",
   checkPermission("update"),
-  uploadDisk.array("gallery", 5),
-  checkSchema(GameValidator.gallerySchema),
+  uploadDisk.array("mediaToAdd"),
   GameController.updateGalleryByGameId
 )
 

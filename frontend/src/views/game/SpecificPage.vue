@@ -1,11 +1,5 @@
 <template>
-  <KeyArtMasterPage
-    :key-art-src="
-      game.mainImgSrc
-        ? `${API_BASE}/${game.mainImgSrc}`
-        : '/backgrounds/ghost-of-tsushima-key-art.jpg'
-    "
-  >
+  <KeyArtMasterPage :key-art-src="gameKeyArt">
     <div class="trapezoid w-100 bg-grey-darken-4"></div>
     <div v-if="isLoading" class="text-center">
       <v-progress-circular indeterminate></v-progress-circular>
@@ -60,7 +54,7 @@
               <v-btn color="orange-darken-3" size="large" block
                 >Add to Cart</v-btn
               >
-              <div class="d-flex ga-3">
+              <div class="d-flex ga-3 flex-wrap">
                 <v-btn
                   v-if="pagePermissions?.games.update"
                   color="blue-darken-3"
@@ -236,6 +230,11 @@ export default {
       })
       if (!this.game.releaseDate) return null
       return formatter.format(new Date(this.game.releaseDate))
+    },
+    gameKeyArt() {
+      if (this.game.mainImgSrc) {
+        return this.API_BASE + "/" + this.game.mainImgSrc
+      } else return "/backgrounds/ghost-of-tsushima-key-art.jpg"
     },
   },
   methods: {

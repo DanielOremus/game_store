@@ -142,7 +142,31 @@ export default {
           }
         )
         const resData = response.data
-        commit("updateGameById", resData.data.game)
+        // commit("updateGameById", resData.data.game)
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async updateGallery({ commit }, payload) {
+      const { mediaToDelete, mediaToAdd, gameId } = payload
+      const formData = new FormData()
+
+      formData.append("mediaToDelete", JSON.stringify(mediaToDelete))
+      mediaToAdd.forEach((file) => formData.append("mediaToAdd", file))
+      try {
+        const response = await axios.put(
+          apiEndpoints.game.updateGallery(gameId),
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        )
+        const resData = response.data
+        // commit("updateGameById", resData.data.game)
       } catch (error) {
         console.log(error)
         throw error

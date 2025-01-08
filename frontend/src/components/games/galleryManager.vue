@@ -18,14 +18,11 @@
         <div class="image-container">
           <v-checkbox
             class="media-selector"
-            :value="image"
+            :value="image._id"
             v-model="mediaToDelete"
           ></v-checkbox>
           <v-img
-            :class="[
-              'image',
-              { selected: selectedMediaIds.includes(image._id) },
-            ]"
+            :class="['image', { selected: mediaToDelete.includes(image._id) }]"
             :src="`${API_BASE}/${image.src}`"
           ></v-img>
         </div>
@@ -41,14 +38,11 @@
         <div class="video-container">
           <v-checkbox
             class="media-selector"
-            :value="video"
+            :value="video._id"
             v-model="mediaToDelete"
           ></v-checkbox>
           <VideoPlayer
-            :class="[
-              'video',
-              { selected: selectedMediaIds.includes(video._id) },
-            ]"
+            :class="['video', { selected: mediaToDelete.includes(video._id) }]"
             :options="{
               controls: true,
               aspectRatio: '16:9',
@@ -67,7 +61,16 @@
           clearable
           density="default"
           v-model="mediaToAdd"
+          multiple
         ></v-file-upload>
+      </v-col>
+    </v-row>
+    <v-row class="mt-10">
+      <v-col>
+        <v-btn block size="large">Back</v-btn>
+      </v-col>
+      <v-col>
+        <v-btn block size="large" @click="onSave">Save changes</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -76,6 +79,7 @@
 <script>
 import config from "../../../config/default"
 import VideoPlayer from "../VideoPlayer.vue"
+import { mapActions } from "vuex"
 export default {
   name: "GalleryManager",
   components: {
@@ -101,13 +105,24 @@ export default {
     gameVideos() {
       return this.gallery.filter((media) => media.mimetype.startsWith("video/"))
     },
-    selectedMediaIds() {
-      return this.mediaToDelete.map((el) => el._id)
-    },
   },
   methods: {
+    ...mapActions("game", ["updateGallery"]),
     videoObj(obj) {
       return { src: `${this.API_BASE}/${obj.src}`, type: obj.mimetype }
+    },
+    async onSave() {
+      try {
+        await this.updateGallery({
+          mediaToDelete: this.mediaToDelete,
+          mediaToAdd: [...this.mediaToAdd],
+          gameId: this.$route.params.id,
+        })
+
+        this.$router.push({ name: "SpecificGame", id: this.$route.params.id })
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 }
