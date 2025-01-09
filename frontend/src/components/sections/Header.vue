@@ -3,7 +3,9 @@
     <nav>
       <ul class="list">
         <li class="header-section" @click="$router.push({ name: 'HomePage' })">
-          Big title
+          <div class="logo-container">
+            <img src="@/assets/images/logo.png" class="logo" alt="logo" />
+          </div>
         </li>
         <li class="header-section">
           <span class="platform">
@@ -168,6 +170,7 @@ export default {
 .header-section:nth-child(2) {
   transition: transform ease 0.3s;
   transform: translateY(2rem);
+
   padding: 1.3rem 1rem;
   height: 5rem;
   border-radius: 9999px;
@@ -317,5 +320,15 @@ export default {
 }
 .item-container:hover::after {
   opacity: 0.3;
+}
+.logo {
+  width: 75%;
+  cursor: pointer;
+}
+.logo-container {
+  display: flex;
+
+  justify-content: center;
+  max-width: 150px;
 }
 </style>

@@ -1,8 +1,9 @@
 import mongoose from "mongoose"
 const cartGameSchema = new mongoose.Schema({
-  gameId: {
+  game: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: "Game",
   },
   amount: {
     type: Number,
@@ -12,6 +13,11 @@ const cartGameSchema = new mongoose.Schema({
       validator: (v) => Number.isInteger(v),
       message: "Amount must be an integer",
     },
+  },
+  selectedPlatform: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Platform",
   },
 })
 

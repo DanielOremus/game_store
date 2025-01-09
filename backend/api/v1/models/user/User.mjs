@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose"
 import bcrypt from "bcryptjs"
 import ResetTokenManager from "../resetToken/ResetTokenManager.mjs"
+import CartManager from "../cart/CartManager.mjs"
 import ResetToken from "../resetToken/ResetToken.mjs"
 const userSchema = new mongoose.Schema({
   email: {
@@ -37,6 +38,7 @@ userSchema.set("toObject", { virtuals: true })
 userSchema.set("toJSON", { virtuals: true })
 
 userSchema.pre("save", async function (next) {
+  await CartManager.create({ games: [], userId: this._id })
   if (this.isModified("password")) {
     this.password = await this.constructor.hashPassword(this.password, 10)
   }
@@ -53,7 +55,8 @@ userSchema.pre("findOneAndUpdate", async function (next) {
 userSchema.post("findOneAndDelete", async function (doc) {
   try {
     //TODO: add method to manager
-    await ResetToken.findOneAndDelete({ userId: doc._id })
+    await ResetTokenManager.deleteOne({ userId: doc._id })
+    await CartManager.deleteOne({ userId: doc._id })
   } catch (error) {
     console.log(error)
   }
