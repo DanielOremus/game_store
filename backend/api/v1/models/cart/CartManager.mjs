@@ -41,21 +41,41 @@ class CartManager extends MongooseManager {
         cart.games[itemIndex].amount += 1
       }
       cart = await cart.save()
-      await cart.populate([
-        {
-          path: "games.game",
-          populate: {
-            path: "platform",
-          },
-        },
-        { path: "games.selectedPlatform" },
-      ])
+      // await cart.populate([
+      //   {
+      //     path: "games.game",
+      //     populate: {
+      //       path: "platform",
+      //     },
+      //   },
+      //   { path: "games.selectedPlatform" },
+      // ])
       return cart
     } catch (error) {
       throw error
     }
   }
-  //TODO: add update amount method
+  async updateItemAmount(userId, itemId, newAmount) {
+    try {
+      return await Cart.findOneAndUpdate(
+        {
+          userId: { $eq: userId },
+          "games.game": { $eq: itemId },
+        },
+        {
+          $set: {
+            "games.$.amount": newAmount,
+          },
+        },
+        {
+          runValidators: true,
+          new: true,
+        }
+      )
+    } catch (error) {
+      throw error
+    }
+  }
   async deleteItem(userId, itemId) {
     try {
       const cart = await Cart.findOneAndUpdate(

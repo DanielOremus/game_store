@@ -45,6 +45,12 @@ router.put(
   GameController.updateGalleryByGameId
 )
 
+router.put(
+  "/update-cart-amount/:gameId",
+  ensureAuthenticated,
+  CartController.updateGameAmount
+)
+
 router.delete("/:id", checkPermission("delete"), GameController.deleteGameById)
 
 router.delete(
