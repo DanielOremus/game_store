@@ -5,6 +5,8 @@ import authRouter from "./auth.mjs"
 import gameRouter from "./game.mjs"
 import platformRouter from "./platform.mjs"
 import genreRouter from "./genre.mjs"
+import cartRouter from "./cart.mjs"
+
 const router = Router()
 
 router.use("/", mainRouter)
@@ -13,5 +15,6 @@ router.use("/auth", authRouter)
 router.use("/games", gameRouter)
 router.use("/platforms", platformRouter)
 router.use("/genres", genreRouter)
+router.use("/carts", cartRouter)
 
 export default router

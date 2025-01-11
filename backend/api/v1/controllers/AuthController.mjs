@@ -129,7 +129,6 @@ class AuthController {
   }
 
   static async generateResetToken(req, res) {
-    //TODO: change link for frontend link
     const { email } = req.body
     try {
       const user = await UserManager.findOne({ email: { $eq: email } })

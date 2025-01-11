@@ -16,6 +16,9 @@ export default {
       return state.isAuthenticated
       // || !!localStorage.getItem("isAuthenticated")
     },
+    userId(state) {
+      return state.userId
+    },
   },
   mutations: {
     setAuthData(state, data) {

@@ -51,7 +51,11 @@
               <span class="new-price"> {{ game.sale_price }}$ </span>
             </div>
             <div class="d-flex w-75 flex-column flex-wrap ga-3">
-              <v-btn color="orange-darken-3" size="large" block
+              <v-btn
+                color="orange-darken-3"
+                size="large"
+                block
+                @click="onAddToCart"
                 >Add to Cart</v-btn
               >
               <div class="d-flex ga-3 flex-wrap">
@@ -198,14 +202,15 @@ export default {
       game: {},
       API_BASE: config.API_BASE,
       deleteDialog: {
-        title: "Are your sure?",
-        textContent: "Do your really want to delete this game?",
+        title: "Are you sure?",
+        textContent: "Do you really want to delete this game?",
       },
     }
   },
   computed: {
     ...mapGetters("game", ["isLoading"]),
     ...mapGetters("permissions", ["pagePermissions"]),
+    ...mapGetters("auth", ["isAuthenticated"]),
 
     gameImages() {
       console.log(this.pagePermissions)
@@ -243,6 +248,7 @@ export default {
       "updateCurrentGame",
       "deleteGameById",
     ]),
+    ...mapActions("cart", ["addGameToCart"]),
     onDelete() {
       this.$refs.deleteDialog.isActive = true
     },
@@ -250,6 +256,17 @@ export default {
       try {
         await this.deleteGameById(this.game._id)
         this.$router.push({ name: "HomePage" })
+      } catch (error) {}
+    },
+    async onAddToCart() {
+      try {
+        if (!this.isAuthenticated) {
+          this.$router.push({ name: "Login" })
+        } else {
+          await this.addGameToCart({
+            gameId: this.game._id,
+          })
+        }
       } catch (error) {}
     },
   },

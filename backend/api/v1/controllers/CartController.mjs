@@ -4,7 +4,11 @@ import GameManager from "../models/game/GameManager.mjs"
 
 class CartController {
   static async getCartByUserId(req, res) {
-    const userId = req.user._id
+    const userId = req.params.userId
+    if (!userId)
+      return res
+        .status(400)
+        .json({ success: false, msg: "User id is required" })
     const cart = await CartManager.getDetailsByUserId(userId)
     if (!cart) {
       return res
@@ -14,7 +18,8 @@ class CartController {
     res.json({ success: true, data: { cart } })
   }
   static async addGameToCart(req, res) {
-    const gameId = req.params.gameId
+    const { gameId, userId } = req.body
+
     try {
       const exists = await GameManager.findById(gameId, { _id: 1 })
       if (!exists) {
@@ -26,7 +31,7 @@ class CartController {
 
       console.log(req.user._id)
 
-      const cart = await CartManager.addItem(req.user._id, gameId)
+      const cart = await CartManager.addItem(userId, gameId)
       res.json({ success: true, data: { cart } })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
@@ -37,14 +42,10 @@ class CartController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
-    const gameId = req.params.gameId
-    const amount = req.body.amount
+    const { gameId, userId, amount } = req.body
+
     try {
-      const cart = await CartManager.updateItemAmount(
-        req.user._id,
-        gameId,
-        amount
-      )
+      const cart = await CartManager.updateItemAmount(userId, gameId, amount)
       if (!cart) {
         return res
           .status(404)
@@ -61,9 +62,10 @@ class CartController {
     }
   }
   static async deleteGameFromCart(req, res) {
-    const gameId = req.params.gameId
+    const { gameId, userId } = req.body
+
     try {
-      const cart = await CartManager.deleteItem(req.user._id, gameId)
+      const cart = await CartManager.deleteItem(userId, gameId)
       res.json({ success: true, data: cart })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })

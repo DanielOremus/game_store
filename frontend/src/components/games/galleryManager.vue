@@ -67,7 +67,7 @@
     </v-row>
     <v-row class="mt-10">
       <v-col>
-        <v-btn block size="large">Back</v-btn>
+        <v-btn block size="large" @click="onBack">Back</v-btn>
       </v-col>
       <v-col>
         <v-btn block size="large" @click="onSave">Save changes</v-btn>
@@ -123,6 +123,12 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    onBack() {
+      this.$router.push({
+        name: "SpecificGame",
+        params: { id: this.$route.params.id },
+      })
     },
   },
 }

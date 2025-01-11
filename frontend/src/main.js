@@ -31,6 +31,6 @@ const vuetify = createVuetify({
   },
 })
 
-store.dispatch("auth/checkAuthStatus", null, { root: true })
-
-createApp(App).use(vuetify).use(router).use(store).mount("#app")
+store.dispatch("auth/checkAuthStatus", null, { root: true }).then(() => {
+  createApp(App).use(vuetify).use(router).use(store).mount("#app")
+})

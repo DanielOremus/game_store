@@ -12,8 +12,7 @@ class UserValidator {
           try {
             const user = await UserManager.findOne(
               { email: { $eq: value } },
-              { _id: 1 },
-              []
+              { _id: 1 }
             )
             if (user) {
               throw new Error("This email is already taken")

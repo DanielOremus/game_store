@@ -2,7 +2,7 @@ import { Router } from "express"
 import AuthController from "../controllers/AuthController.mjs"
 import {
   ensureAuthenticated,
-  conditionalUserScope,
+  getAccountOwnerChecker,
   getPermissionChecker,
   ensureNotAuthenticated,
 } from "../../../middlewares/auth.mjs"
@@ -11,7 +11,7 @@ import UserValidator from "../validators/UserValidator.mjs"
 import AuthValidator from "../validators/AuthValidator.mjs"
 
 const checkPermission = getPermissionChecker("users")
-
+const skipCheckIfOwner = getAccountOwnerChecker()
 const router = Router()
 
 router.get("/check", AuthController.isAuthenticated)
@@ -19,8 +19,8 @@ router.get("/check", AuthController.isAuthenticated)
 router.get(
   "/:id/get-permissions",
   ensureAuthenticated,
-  conditionalUserScope,
-  checkPermission("roles"),
+  skipCheckIfOwner("params", "id"),
+  checkPermission("read"),
   AuthController.getPagesPermissions
 )
 router.get("/get-guest-permissions", AuthController.getPagesPermissions)

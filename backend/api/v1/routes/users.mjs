@@ -3,12 +3,13 @@ import UserController from "../controllers/UserController.mjs"
 import {
   ensureAuthenticated,
   getPermissionChecker,
-  conditionalUserScope,
+  getAccountOwnerChecker,
 } from "../../../middlewares/auth.mjs"
 import { checkSchema } from "express-validator"
 import UserValidator from "../validators/UserValidator.mjs"
 
 const checkPermission = getPermissionChecker("users")
+const skipCheckIfOwner = getAccountOwnerChecker()
 
 const router = Router()
 
@@ -18,7 +19,7 @@ router.get("/", checkPermission("read"), UserController.getAllProfiles)
 
 router.post(
   "/:userId/update-password",
-  conditionalUserScope,
+  skipCheckIfOwner("params", "userId"),
   checkPermission("update"),
   checkSchema(UserValidator.updatePasswordSchema),
   UserController.updateProfilePasswordById
@@ -26,7 +27,7 @@ router.post(
 
 router.get(
   "/:id",
-  conditionalUserScope,
+  skipCheckIfOwner("params", "id"),
   checkPermission("read"),
   UserController.getProfileById
 )
@@ -47,7 +48,7 @@ router.put(
 
 router.delete(
   "/:id",
-  conditionalUserScope,
+  skipCheckIfOwner("params", "id"),
   checkPermission("delete"),
   UserController.deleteProfileById
 )

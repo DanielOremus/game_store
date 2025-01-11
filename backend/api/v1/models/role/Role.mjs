@@ -39,6 +39,10 @@ const roleSchema = new Schema({
       type: permissionsSchema,
       default: {},
     },
+    carts: {
+      type: permissionsSchema,
+      default: {},
+    },
   },
 })
 

@@ -14,7 +14,6 @@
 <script>
 import GamesList from "@/components/games/list.vue"
 import KeyArtMasterPage from "@/layouts/KeyArtMasterPage.vue"
-
 import { mapActions, mapGetters } from "vuex"
 export default {
   name: "HomePage",

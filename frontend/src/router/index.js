@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import authRoutes from "./routes/auth"
 import gameRoutes from "./routes/game"
+import cartRoutes from "./routes/cart"
 import HomePage from "@/views/HomePage.vue"
 import store from "@/store"
 
@@ -27,6 +28,7 @@ const routes = [
   },
   ...authRoutes,
   ...gameRoutes,
+  ...cartRoutes,
 ]
 
 const router = createRouter({

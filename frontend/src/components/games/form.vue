@@ -1,6 +1,4 @@
 <template>
-  <!-- TODO: finish game crud -->
-
   <v-container class="form-container" fluid>
     <v-form class="form" @submit.prevent="onSubmit">
       <v-row>
@@ -226,7 +224,6 @@ export default {
     ...mapActions("platform", ["fetchAllPlatforms"]),
     ...mapActions("genre", ["fetchAllGenres"]),
     ...mapActions("game", ["updateGameById", "createGame"]),
-    //TODO: Add gallery update/delete
     onFileChange(e) {
       const file = e.target.files[0]
       if (file) {

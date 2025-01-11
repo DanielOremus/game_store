@@ -43,7 +43,7 @@
           </div>
         </li>
         <li class="header-section d-flex align-center ga-6">
-          <CartIcon class="cart-icon" />
+          <CartIcon class="cart-icon" @click="onCartClick" />
           <div :class="['profile-icon-container', { auth: isAuthenticated }]">
             <ProfileIcon
               v-if="!isAuthenticated"
@@ -140,6 +140,10 @@ export default {
       await this.logout()
       this.$router.push({ name: "Login" })
     },
+    onCartClick() {
+      if (!this.isAuthenticated) return this.$router.push({ name: "Login" })
+      this.$router.push({ name: "Cart" })
+    },
   },
   mounted() {
     document.addEventListener("scroll", this.handleScroll)
@@ -214,7 +218,7 @@ export default {
 .platform {
   cursor: pointer;
   position: relative;
-  padding: 1.05rem 1rem;
+  padding: 0.9rem 1rem;
 }
 .platform::after {
   content: "";
@@ -322,12 +326,11 @@ export default {
   opacity: 0.3;
 }
 .logo {
-  width: 75%;
+  width: 70%;
   cursor: pointer;
 }
 .logo-container {
   display: flex;
-
   justify-content: center;
   max-width: 150px;
 }

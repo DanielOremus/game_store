@@ -24,6 +24,12 @@ export default Object.freeze({
     updateGallery: (id) => `${API_URI}/games/update-gallery/${id}`,
     deleteGameById: (id) => `${API_URI}/games/${id}`,
   },
+  cart: {
+    getDetails: (id) => `${API_URI}/carts/${id}`,
+    addGame: `${API_URI}/carts/add-to-cart`,
+    deleteGame: `${API_URI}/carts/delete-from-cart`,
+    updateAmount: `${API_URI}/carts/update-game-amount`,
+  },
   platform: {
     fetchPlatforms: `${API_URI}/platforms`,
   },

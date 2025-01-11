@@ -54,7 +54,6 @@ userSchema.pre("findOneAndUpdate", async function (next) {
 
 userSchema.post("findOneAndDelete", async function (doc) {
   try {
-    //TODO: add method to manager
     await ResetTokenManager.deleteOne({ userId: doc._id })
     await CartManager.deleteOne({ userId: doc._id })
   } catch (error) {
