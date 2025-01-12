@@ -49,8 +49,6 @@ export default {
   },
   methods: {
     onConfirm() {
-      console.log(this.confirmCallback)
-
       this.isActive = false
       this.confirmCallback()
     },

@@ -65,7 +65,8 @@ export default {
   border-radius: 1rem;
   width: 100%;
   height: auto;
-  object-fit: cover;
+  aspect-ratio: 16/9;
+  object-fit: fill;
 }
 .main-img-container {
   transition: transform 0.3s ease;

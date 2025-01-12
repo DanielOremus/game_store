@@ -100,6 +100,7 @@ export default {
   border-radius: 1rem;
   height: 150px;
   cursor: pointer;
+  aspect-ratio: 16/9;
 }
 .price-container span {
   font-size: 1.5rem;

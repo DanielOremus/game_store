@@ -18,7 +18,6 @@ class GameValidator {
         },
         errorMessage: "Name must be 3-50 characters long",
       },
-      escape: true,
     },
     description: {
       trim: true,
@@ -28,10 +27,9 @@ class GameValidator {
         },
         errorMessage: "Description must be at least 3 characters long",
       },
-      escape: true,
     },
     price: {
-      isInt: {
+      isFloat: {
         options: {
           min: 1,
         },
@@ -41,7 +39,9 @@ class GameValidator {
     sale: {
       custom: {
         options: (v) => {
-          if (!v || (v >= 0 && v <= 1)) return true
+          console.log(v)
+
+          if (isFinite(v) || (v >= 0 && v <= 1)) return true
           throw new Error("Sale must be 0-1")
         },
       },

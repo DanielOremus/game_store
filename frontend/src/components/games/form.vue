@@ -22,7 +22,7 @@
             inset
             v-model="price.value"
             :error-messages="price.errorMessages"
-            @input="clearErrorMessages(['price'])"
+            @update:modelValue="clearErrorMessages(['price'])"
           >
           </v-number-input>
         </v-col>
@@ -296,12 +296,13 @@ export default {
         "description",
         "mainImg",
       ]
+
+      if (!this.sale.value) this.sale.value = 0
       const payload = {}
       fields.forEach((field) => {
         payload[field] = this[field].value
       })
-      console.log(payload)
-
+      let createdGame
       try {
         if (this.currentGame?.id)
           await this.updateGameById({
@@ -309,14 +310,20 @@ export default {
             gameObj: payload,
           })
         else {
-          await this.createGame(payload)
+          createdGame = await this.createGame(payload)
         }
-        this.$emit("submit", { success: true, id: this.currentGame?.id })
+
+        this.$emit("submit-event", {
+          success: true,
+          id: this.currentGame?.id ?? createdGame.id,
+        })
       } catch (error) {
+        console.log(error)
+
         const response = error.response
-        switch (response.statusCode) {
+        switch (response?.statusCode) {
         }
-        this.$emit("submit", {})
+        this.$emit("submit", { success: false })
       }
     },
   },
@@ -324,9 +331,9 @@ export default {
     try {
       await this.fetchAllPlatforms()
       await this.fetchAllGenres()
-      console.log(this.platforms)
-
-      this.setInitData()
+      if (this.currentGame?.id) {
+        this.setInitData()
+      }
     } catch (error) {
       console.log(error)
     }

@@ -122,7 +122,8 @@ export default {
           withCredentials: true,
         })
         const resData = response.data
-        commit("createGame", resData.data.game)
+        // commit("createGame", resData.data.game)
+        return resData.data.game
       } catch (error) {
         console.log(error)
         throw error

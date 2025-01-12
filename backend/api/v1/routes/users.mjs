@@ -17,6 +17,13 @@ router.use(ensureAuthenticated)
 
 router.get("/", checkPermission("read"), UserController.getAllProfiles)
 
+router.get(
+  "/:id",
+  skipCheckIfOwner("params", "id"),
+  checkPermission("read"),
+  UserController.getProfileById
+)
+
 router.post(
   "/:userId/update-password",
   skipCheckIfOwner("params", "userId"),
@@ -25,12 +32,6 @@ router.post(
   UserController.updateProfilePasswordById
 )
 
-router.get(
-  "/:id",
-  skipCheckIfOwner("params", "id"),
-  checkPermission("read"),
-  UserController.getProfileById
-)
 //Creating profile by admin
 router.post(
   "/create",

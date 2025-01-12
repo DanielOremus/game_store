@@ -76,6 +76,7 @@ class GameController {
     const id = req.params.id
     const { name, description, price, sale, genre, platform, releaseDate } =
       req.body
+    console.log(description)
 
     let mainImgSrc = null
     let statusCode = null

@@ -1,6 +1,6 @@
 <template>
   <MainMasterPage>
-    <Form @submit="submitCallback" />
+    <Form @submit-event="submitCallback" />
   </MainMasterPage>
 </template>
 
@@ -15,8 +15,12 @@ export default {
   },
   methods: {
     submitCallback(e) {
+      console.log("id")
+
+      console.log(e.id)
+
       if (e.success) {
-        this.$router.push({ name: "SpecificGame", id: e.id })
+        this.$router.push({ name: "SpecificGame", params: { id: e.id } })
       } else {
       }
     },
