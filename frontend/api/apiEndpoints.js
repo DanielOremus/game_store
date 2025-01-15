@@ -36,4 +36,11 @@ export default Object.freeze({
   genre: {
     fetchGenres: `${API_URI}/genres`,
   },
+  user: {
+    fetchUserById: (id) => `${API_URI}/users/${id}`,
+    updateUserPassword: (id) => `${API_URI}/users/update-password/${id}`,
+  },
+  role: {
+    fetchRoles: `${API_URI}/roles`,
+  },
 })

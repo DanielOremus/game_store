@@ -69,31 +69,81 @@ class UserController {
     }
   }
   static async updateProfileById(req, res) {
-    //TODO: add role update
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
 
-    const { firstName, lastName, roleIds } = req.body
-    let user = null
+    const { firstName, lastName, roleId } = req.body
     const id = req.params.id
 
     try {
-      user = await UserManager.findById(id, {}, ["role"])
-      if (!user) {
-        return res.status(404).json({ success: false, msg: "User not found" })
-      }
+      const role = await RoleManager.findById(roleId, { _id: 1 })
 
-      user = await UserManager.updateById(id, {
+      const user = await UserManager.updateById(id, {
         firstName,
         lastName,
+        role: role ? role._id : undefined,
       })
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, msg: "User by id not found" })
+      }
+
+      await user.populate("role")
       const userResponse = user.toObject()
       delete userResponse.password
       res.status(200).json({ success: true, data: { user: userResponse } })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
+    }
+  }
+  static async updateProfileEmail(req, res) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() })
+    }
+
+    const { oldEmail, newEmail } = req.body
+    const id = req.params.id
+
+    try {
+      res.status(200).json({ success: true, data: { user: userResponse } })
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message })
+    }
+  }
+  static async updateProfilePasswordById(req, res) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() })
+    }
+    const { newPassword, oldPassword } = req.body
+    const id = req.params.userId
+
+    try {
+      const user = await UserManager.findById(id)
+      console.log(user)
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, msg: "User by id not found" })
+      }
+      const isMatch = await user.validatePassword(oldPassword)
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ success: false, msg: "Password is not valid" })
+      }
+      await UserManager.updateById(id, { password: newPassword })
+      res.json({ success: true, msg: "Password was successfully changed" })
+    } catch (error) {
+      console.log(error)
+
+      return res.status(500).json({ success: false, msg: error.message })
     }
   }
   static async deleteProfileById(req, res) {
@@ -111,33 +161,6 @@ class UserController {
         return res.json({ success: true, msg: "Your profile was deleted" })
       }
       res.json({ success: true, msg: "User was successfully deleted" })
-    } catch (error) {
-      res.status(500).json({ success: false, msg: error.message })
-    }
-  }
-  //Updating password when user is authorized
-  static async updateProfilePasswordById(req, res) {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() })
-    }
-    const { oldPassword, newPassword } = req.body
-    const userId = req.params.userId
-    try {
-      const user = await UserManager.findById(userId)
-      if (!user) {
-        return res.status(404).json({ success: false, msg: "User not found" })
-      }
-      const isMatch = await user.validatePassword(oldPassword)
-      if (!isMatch) {
-        return res
-          .status(400)
-          .json({ success: false, msg: "Current password is incorrect" })
-      }
-      await UserManager.updateById(userId, {
-        password: newPassword,
-      })
-      res.json({ success: true, msg: "Password was successfully changed" })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
     }

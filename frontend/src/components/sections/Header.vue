@@ -1,5 +1,8 @@
 <template>
-  <header :class="['header', { scrolled: isScrolled }]" ref="headerElement">
+  <header
+    :class="['header', { scrolled: isScrolledProp || isScrolled }]"
+    ref="headerElement"
+  >
     <nav>
       <ul class="list">
         <li class="header-section" @click="$router.push({ name: 'HomePage' })">
@@ -43,7 +46,7 @@
           </div>
         </li>
         <li class="header-section d-flex align-center ga-6">
-          <CartIcon class="cart-icon" @click="onCartClick" />
+          <CartIcon class="cart-icon" @click="onCart" />
           <div :class="['profile-icon-container', { auth: isAuthenticated }]">
             <ProfileIcon
               v-if="!isAuthenticated"
@@ -77,7 +80,7 @@
                 ></v-divider>
 
                 <v-list-item>
-                  <div class="item-container">
+                  <div class="item-container" @click="onProfile">
                     <span class="text-h6 pl-10">My Profile</span>
                   </div>
                 </v-list-item>
@@ -123,6 +126,12 @@ export default {
     ProfileAuthIcon,
     SearchIcon,
   },
+  props: {
+    isScrolledProp: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isScrolled: false,
@@ -140,9 +149,11 @@ export default {
       await this.logout()
       this.$router.push({ name: "Login" })
     },
-    onCartClick() {
-      if (!this.isAuthenticated) return this.$router.push({ name: "Login" })
+    onCart() {
       this.$router.push({ name: "Cart" })
+    },
+    onProfile() {
+      this.$router.push({ name: "Profile" })
     },
   },
   mounted() {

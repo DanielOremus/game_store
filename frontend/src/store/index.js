@@ -6,6 +6,7 @@ import gameModule from "./modules/game.js"
 import platformModule from "./modules/platform.js"
 import genreModule from "./modules/genre.js"
 import cartModule from "./modules/cart.js"
+import roleModule from "./modules/role.js"
 
 const store = createStore({
   modules: {
@@ -16,6 +17,7 @@ const store = createStore({
     platform: platformModule,
     genre: genreModule,
     cart: cartModule,
+    role: roleModule,
   },
 })
 

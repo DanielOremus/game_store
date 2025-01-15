@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router"
 import authRoutes from "./routes/auth"
 import gameRoutes from "./routes/game"
 import cartRoutes from "./routes/cart"
+import profileRoutes from "./routes/profile"
+
 import HomePage from "@/views/HomePage.vue"
 import store from "@/store"
 
@@ -29,6 +31,7 @@ const routes = [
   ...authRoutes,
   ...gameRoutes,
   ...cartRoutes,
+  ...profileRoutes,
 ]
 
 const router = createRouter({
@@ -49,9 +52,7 @@ router.beforeEach(async (to, from) => {
     return router.push({ name: "HomePage" })
   }
 
-  const pagePermissions = JSON.parse(
-    JSON.stringify(store.getters["permissions/pagePermissions"])
-  )
+  const pagePermissions = store.getters["permissions/pagePermissions"]
 
   if (
     pagePermissions?.[to.meta.pageCategory]?.[to.meta.pagePermission] === false

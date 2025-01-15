@@ -4,6 +4,7 @@ import {
   ensureAuthenticated,
   getPermissionChecker,
   getAccountOwnerChecker,
+  ensureOwner,
 } from "../../../middlewares/auth.mjs"
 import { checkSchema } from "express-validator"
 import UserValidator from "../validators/UserValidator.mjs"
@@ -24,14 +25,6 @@ router.get(
   UserController.getProfileById
 )
 
-router.post(
-  "/:userId/update-password",
-  skipCheckIfOwner("params", "userId"),
-  checkPermission("update"),
-  checkSchema(UserValidator.updatePasswordSchema),
-  UserController.updateProfilePasswordById
-)
-
 //Creating profile by admin
 router.post(
   "/create",
@@ -45,6 +38,14 @@ router.put(
   checkPermission("update"),
   checkSchema(UserValidator.updateUserSchema),
   UserController.updateProfileById
+)
+
+router.put(
+  "/update-password/:userId",
+  skipCheckIfOwner("params", "userId"),
+  ensureOwner,
+  checkSchema(UserValidator.updatePasswordSchema),
+  UserController.updateProfilePasswordById
 )
 
 router.delete(

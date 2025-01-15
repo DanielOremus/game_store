@@ -8,7 +8,6 @@ import passport from "../config/passport.mjs"
 import mongoSanitize from "express-mongo-sanitize"
 import cors from "cors"
 import config from "../config/default.mjs"
-import GenreManager from "../api/v1/models/genre/GenreManager.mjs"
 
 export default (app) => {
   const __filename = fileURLToPath(import.meta.url) // get the resolved path to the file

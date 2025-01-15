@@ -108,6 +108,13 @@ class MongooseManager {
       throw new Error("Error deleting item by filters: " + error.message)
     }
   }
+  async deleteMany(filters) {
+    try {
+      return this.model.deleteMany(filters)
+    } catch (error) {
+      throw new Error("Error deleting items by filters: " + error.message)
+    }
+  }
   async updateById(id, itemObj) {
     try {
       return await this.model.findByIdAndUpdate(id, itemObj, {

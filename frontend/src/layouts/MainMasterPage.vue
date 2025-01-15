@@ -1,5 +1,5 @@
 <template>
-  <Header class="header" />
+  <Header class="header" :is-scrolled-prop="isHeaderScrolled" />
   <slot></slot>
 </template>
 
@@ -9,6 +9,12 @@ export default {
   name: "MainMasterPage",
   components: {
     Header,
+  },
+  props: {
+    isHeaderScrolled: {
+      type: Boolean,
+      default: false,
+    },
   },
 }
 </script>

@@ -6,8 +6,6 @@ export default [
     name: "Cart",
     component: CartPage,
     meta: {
-      pageCategory: "carts",
-      pagePermission: "read",
       requiresAuth: true,
     },
   },
