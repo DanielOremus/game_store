@@ -14,7 +14,6 @@ export default {
     },
     isAuthenticated(state) {
       return state.isAuthenticated
-      // || !!localStorage.getItem("isAuthenticated")
     },
     userId(state) {
       return state.userId
@@ -24,16 +23,16 @@ export default {
     setAuthData(state, data) {
       state.userId = data.id
       state.fullName = data.fullName
-      // localStorage.setItem("userId", data.id)
-      // localStorage.setItem("fullName", data.fullName)
     },
     setAuthenticatedStatus(state, status) {
       state.isAuthenticated = status
-      // localStorage.setItem("isAuthenticated", status)
     },
   },
 
   actions: {
+    updateAuthData({ commit }, payload) {
+      commit("setAuthData", payload)
+    },
     async login({ commit, dispatch }, userData) {
       try {
         const response = await axios.post(apiEndpoints.auth.login, userData, {
@@ -112,22 +111,17 @@ export default {
       }
     },
     async validateResetToken({ commit }, payload) {
-      console.log(payload)
-      const { userId, token } = payload
       try {
-        await axios.get(apiEndpoints.auth.validateResetToken(userId, token))
+        await axios.post(apiEndpoints.auth.validateResetToken, payload)
         return { isTokenValid: true }
       } catch (error) {
         return { isTokenValid: false, error }
       }
     },
     async resetPassword({ commit }, payload) {
-      const { userId, token, newPassword, confirmPassword } = payload
+      //const { userId, token, newPassword, confirmPassword } = payload
       try {
-        await axios.post(apiEndpoints.auth.resetPassword(userId, token), {
-          newPassword,
-          confirmPassword,
-        })
+        await axios.post(apiEndpoints.auth.resetPassword, payload)
         console.log("Password was successfully changed")
       } catch (error) {
         console.log("----err---")
@@ -161,10 +155,6 @@ export default {
         console.log("Error while checking auth status")
         commit("setAuthenticatedStatus", false)
       }
-    },
-    syncAuthStatus({ commit }) {
-      const status = localStorage.getItem("isAuthenticated")
-      commit("setAuthenticatedStatus", !!status)
     },
   },
 }

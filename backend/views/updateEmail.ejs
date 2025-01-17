@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Dear <%=firstName%>,</h2>
+    <div>
+      <p>
+        We received request, about updating your email. You can continue by
+        clicking the link below. This link is active during
+        <strong><%=activeHoursTime%></strong> hour(s). If it wasn't you, ignore
+        this message. <br />
+      </p>
+      <a href="<%=link%>"><%=link%></a>
+    </div>
+    <h4 style="text-align: right; font-style: italic; margin-right: 1rem">
+      Sincerely, GameStore
+    </h4>
+  </body>
+</html>

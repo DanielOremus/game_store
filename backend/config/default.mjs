@@ -15,6 +15,14 @@ export default Object.freeze({
     senderName: process.env.EMAIL_SENDER,
     password: process.env.EMAIL_PASSWORD,
   },
-  baseUrl: process.env.BASE_URL,
+  tokensAliveTime: {
+    passwordReset: {
+      hours: 1,
+    },
+    emailUpdate: {
+      hours: 1,
+    },
+  },
+  clientBase: process.env.CLIENT_BASE,
   port: process.env.PORT,
 })

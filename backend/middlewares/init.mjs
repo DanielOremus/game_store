@@ -39,7 +39,7 @@ export default (app) => {
   app.use(
     cors({
       credentials: true,
-      origin: config.baseUrl,
+      origin: config.clientBase,
     })
   )
 }

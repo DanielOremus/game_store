@@ -52,10 +52,10 @@ router.beforeEach(async (to, from) => {
     return router.push({ name: "HomePage" })
   }
 
-  const pagePermissions = store.getters["permissions/pagePermissions"]
+  const pagesPermissions = store.getters["permissions/pagesPermissions"]
 
   if (
-    pagePermissions?.[to.meta.pageCategory]?.[to.meta.pagePermission] === false
+    pagesPermissions?.[to.meta.pageCategory]?.[to.meta.pagePermission] === false
   ) {
     return router.push({ name: "NotFound" })
   }

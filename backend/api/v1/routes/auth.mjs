@@ -25,8 +25,6 @@ router.get(
 )
 router.get("/get-guest-permissions", AuthController.getPagesPermissions)
 
-router.get("/validate-token/:userId/:token", AuthController.validateResetToken)
-
 router.post(
   "/signup",
   ensureNotAuthenticated,
@@ -41,11 +39,14 @@ router.post(
 )
 
 router.post("/logout", ensureAuthenticated, AuthController.logout)
-//Add email validator
-router.post("/reset-password", AuthController.generateResetToken)
+
+//TODO: Add email validator
+router.post("/reset-password/sendLink", AuthController.generateResetToken)
+
+router.post("/reset-password/validate-token", AuthController.validateResetToken)
 
 router.post(
-  "/reset-password/:userId/:token",
+  "/reset-password",
   checkSchema(AuthValidator.resetPasswordSchema),
   AuthController.resetPassword
 )

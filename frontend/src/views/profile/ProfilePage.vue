@@ -11,7 +11,7 @@
     </transition>
     <div
       class="flex-grow-1 d-flex justify-center align-center"
-      v-if="isProfileLoading || areRolesLoading"
+      v-if="isProfileLoading"
     >
       <v-progress-circular
         size="35"
@@ -27,11 +27,7 @@
           </h1>
         </v-col>
         <v-col>
-          <ProfileForm
-            @submit-form="onFormSubmit"
-            :role-list="roleList"
-            :profile="profile"
-          />
+          <ProfileFormCard @submit-form="onFormSubmit" :profile="profile" />
         </v-col>
       </v-row>
     </v-container>
@@ -40,7 +36,7 @@
 
 <script>
 import PasswordForm from "@/components/profile/passwordForm.vue"
-import ProfileForm from "@/components/profile/form.vue"
+import ProfileFormCard from "@/components/profile/card.vue"
 import Alert from "@/components/alerts/Alert.vue"
 import MainMasterPage from "@/layouts/MainMasterPage.vue"
 import { mapActions, mapGetters } from "vuex"
@@ -49,7 +45,7 @@ export default {
   components: {
     PasswordForm,
     MainMasterPage,
-    ProfileForm,
+    ProfileFormCard,
     Alert,
   },
   data() {
@@ -64,12 +60,9 @@ export default {
   computed: {
     ...mapGetters("profile", ["profile"]),
     ...mapGetters("profile", { isProfileLoading: "isLoading" }),
-    ...mapGetters("role", ["roleList"]),
-    ...mapGetters("role", { areRolesLoading: "isLoading" }),
   },
   methods: {
     ...mapActions("profile", ["fetchProfileById"]),
-    ...mapActions("role", ["fetchAllRoles"]),
 
     showAlert(type, title, text) {
       this.alert.type = type
@@ -77,10 +70,12 @@ export default {
       this.alert.text = text
       this.$refs.alertComponent.showAlert()
     },
-    onFormSubmit(e) {},
+    onFormSubmit(e) {
+      const { type, title, text } = e
+      this.showAlert(type, title, text)
+    },
   },
   mounted() {
-    this.fetchAllRoles()
     this.fetchProfileById()
   },
 }

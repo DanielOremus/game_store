@@ -6,11 +6,9 @@ export default Object.freeze({
     login: `${API_URI}/auth/login`,
     signup: `${API_URI}/auth/signup`,
     logout: `${API_URI}/auth/logout`,
-    generateResetToken: `${API_URI}/auth/reset-password`,
-    validateResetToken: (userId, token) =>
-      `${API_URI}/auth/validate-token/${userId}/${token}`,
-    resetPassword: (userId, token) =>
-      `${API_URI}/auth/reset-password/${userId}/${token}`,
+    generateResetToken: `${API_URI}/auth/reset-password/sendLink`,
+    validateResetToken: `${API_URI}/auth/reset-password/validate-token`,
+    resetPassword: `${API_URI}/auth/reset-password`,
     getPermissions: (userId) =>
       userId
         ? `${API_URI}/auth/${userId}/get-permissions`
@@ -38,7 +36,10 @@ export default Object.freeze({
   },
   user: {
     fetchUserById: (id) => `${API_URI}/users/${id}`,
-    updateUserPassword: (id) => `${API_URI}/users/update-password/${id}`,
+    updateUserPassword: `${API_URI}/users/update-password`,
+    updateProfile: (id) => `${API_URI}/users/update/${id}`,
+    generateEmailUpdateLink: `${API_URI}/users/update-email/sendLink`,
+    updateEmail: `${API_URI}/users/update-email/confirmation`,
   },
   role: {
     fetchRoles: `${API_URI}/roles`,

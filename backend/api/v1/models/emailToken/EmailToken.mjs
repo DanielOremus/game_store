@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import config from "../../../../config/default.mjs"
-const tokenSchema = {
+
+const emailTokenSchema = new mongoose.Schema({
   token: {
     type: String,
     required: true,
@@ -10,11 +11,14 @@ const tokenSchema = {
     required: true,
     ref: "User",
   },
+  newEmail: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
-    default: Date.now,
-    expires: config.tokensAliveTime.passwordReset.hours * 3600,
+    expires: config.tokensAliveTime.emailUpdate.hours * 3600,
   },
-}
+})
 
-export default mongoose.model("ResetToken", tokenSchema)
+export default mongoose.model("email_token", emailTokenSchema)

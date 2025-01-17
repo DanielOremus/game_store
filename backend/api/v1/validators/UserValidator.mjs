@@ -94,20 +94,19 @@ class UserValidator {
     },
   }
   static updateEmailSchema = {
-    email: {
+    newEmail: {
       trim: true,
       isEmail: {
         errorMessage: "Oops! That doesn’t look like a valid email address",
       },
       custom: {
-        options: async (value, { req }) => {
+        options: async (value) => {
           try {
-            const { count } = await UserManager.findMany(
-              { email: { $eq: value }, _id: { $ne: req.params.id } },
-              { _id: 1 },
-              []
+            const isEmailTaken = await UserManager.findOne(
+              { email: { $eq: value } },
+              { _id: 1 }
             )
-            if (count > 0) {
+            if (isEmailTaken) {
               throw new Error("This email is already taken")
             }
             return true
@@ -122,6 +121,7 @@ class UserValidator {
   }
   static updatePasswordSchema = {
     oldPassword: {
+      trim: true,
       notEmpty: {
         bail: true,
         errorMessage: "Old password is required",
@@ -135,7 +135,6 @@ class UserValidator {
         },
         errorMessage: "Password must be at least 4 characters long",
       },
-      escape: true,
     },
   }
 }

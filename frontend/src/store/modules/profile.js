@@ -52,12 +52,53 @@ export default {
         commit("setLoading", false)
       }
     },
-    async updateUserPassword({ commit }, payload) {
-      const { oldPassword, newPassword, userId } = payload
+    async updateProfileById({ commit, rootGetters, dispatch }, payload) {
+      const { firstName, lastName, roleId, userId } = payload
+      console.log(roleId)
+
+      const data = { firstName, lastName, userId }
+      if (rootGetters["permissions/pagesPermissions"].users.update) {
+        data.roleId = roleId
+      }
       try {
         const response = await axios.put(
-          apiEndpoints.user.updateUserPassword(userId),
-          { oldPassword, newPassword }
+          apiEndpoints.user.updateProfile(userId),
+          data,
+          { withCredentials: true }
+        )
+        const resData = response.data
+        commit("setProfile", resData.data.user)
+        dispatch(
+          "auth/updateAuthData",
+          { fullName: resData.data.user.fullName, id: userId },
+          { root: true }
+        )
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async updateUserPassword({ commit }, payload) {
+      console.debug(payload)
+      try {
+        await axios.put(apiEndpoints.user.updateUserPassword, payload, {
+          withCredentials: true,
+        })
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+
+    async sendEmailUpdateLink({ commit }, payload) {
+      console.debug("email link payload")
+      console.debug(payload)
+      try {
+        const response = await axios.post(
+          apiEndpoints.user.generateEmailUpdateLink,
+          payload,
+          { withCredentials: true }
         )
       } catch (error) {
         console.log(error)

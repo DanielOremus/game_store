@@ -7,7 +7,7 @@ export default {
     permissions: null,
   }),
   getters: {
-    pagePermissions(state) {
+    pagesPermissions(state) {
       const permissions = state.permissions
       //   || JSON.parse(localStorage.getItem("permissions"))
       // console.log(permissions)

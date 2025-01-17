@@ -42,7 +42,7 @@ class AuthController {
       console.log(password)
 
       const user = await UserManager.create({
-        email,
+        email: email.toLowerCase(),
         firstName,
         lastName,
         password,
@@ -144,10 +144,11 @@ class AuthController {
           token: crypto.randomBytes(32).toString("hex"),
         })
       }
-      const resetLink = `${config.baseUrl}/auth/reset-password/${user.id}/${resetToken.token}`
+      const resetLink = `${config.clientBase}/auth/reset-password/${user.id}/${resetToken.token}`
       const letterContent = await ejs.renderFile("views/resetPassword.ejs", {
         firstName: user.firstName,
         link: resetLink,
+        activeHoursTime: config.tokensAliveTime.passwordReset.hours,
         date: new Date().toUTCString(),
       })
       await sendEmail(email, "Password reset", letterContent)
@@ -160,8 +161,7 @@ class AuthController {
   }
 
   static async validateResetToken(req, res) {
-    const { userId, token } = req.params
-
+    const { userId, token } = req.body
     try {
       const exists = await ResetTokenManager.findOne({
         userId: { $eq: userId },
@@ -182,8 +182,7 @@ class AuthController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
-    const { userId, token } = req.params
-    const { newPassword } = req.body
+    const { newPassword, userId, token } = req.body
     try {
       const exists = await ResetTokenManager.findOne({
         userId: { $eq: userId },
