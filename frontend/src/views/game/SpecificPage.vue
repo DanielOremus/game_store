@@ -60,7 +60,7 @@
               >
               <div class="d-flex ga-3 flex-wrap">
                 <v-btn
-                  v-if="pagePermissions?.games.update"
+                  v-if="pagesPermissions?.games.update"
                   color="blue-darken-3"
                   class="flex-fill"
                   prepend-icon="mdi-update"
@@ -75,7 +75,7 @@
                 >
 
                 <v-btn
-                  v-if="pagePermissions?.games.update"
+                  v-if="pagesPermissions?.games.update"
                   prepend-icon="mdi-image-edit"
                   class="flex-fill"
                   color="grey-darken-3"
@@ -90,7 +90,7 @@
                 >
 
                 <v-btn
-                  v-if="pagePermissions?.games.delete"
+                  v-if="pagesPermissions?.games.delete"
                   prepend-icon="mdi-delete"
                   class="flex-fill"
                   color="error"
@@ -209,11 +209,11 @@ export default {
   },
   computed: {
     ...mapGetters("game", ["isLoading"]),
-    ...mapGetters("permissions", ["pagePermissions"]),
+    ...mapGetters("permissions", ["pagesPermissions"]),
     ...mapGetters("auth", ["isAuthenticated"]),
 
     gameImages() {
-      console.log(this.pagePermissions)
+      console.log(this.pagesPermissions)
 
       return this.game.gallery?.filter((el) => el.mimetype.startsWith("image/"))
     },
@@ -308,7 +308,7 @@ export default {
 .main-img {
   width: 100%;
   /* height: 100%; */
-  /* aspect-ratio: 16/9; */
+  aspect-ratio: 16/9;
   object-fit: fill;
   border-radius: 25px;
 }
@@ -341,7 +341,7 @@ export default {
   margin-top: 8rem;
 }
 .game-description {
-  margin-top: 3rem;
+  margin-top: 2rem;
   color: var(--main-text-color);
 }
 .game-data-container {
@@ -364,6 +364,6 @@ export default {
   }
 }
 .gallery-wrapper {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 </style>

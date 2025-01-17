@@ -14,7 +14,7 @@
       </div>
       <div class="d-flex justify-space-between discount">
         <span>Discount </span>
-        <span>{{ totalSalePrice - totalPrice }}$</span>
+        <span>{{ discount }}$</span>
       </div>
       <div class="mt-5 d-flex justify-space-between subtotal">
         <span>Subtotal</span>
@@ -30,6 +30,10 @@ export default {
   name: "CartCheckout",
   computed: {
     ...mapGetters("cart", ["totalPrice", "totalSalePrice", "isLoading"]),
+    discount() {
+      const discount = this.totalSalePrice - this.totalPrice
+      return parseFloat(discount.toFixed(2))
+    },
   },
 }
 </script>

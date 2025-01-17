@@ -11,16 +11,18 @@ export default {
       return state.cart
     },
     totalSalePrice(state) {
-      return state.cart?.games?.reduce(
+      const result = state.cart?.games?.reduce(
         (acc, item) => acc + parseFloat(item.game.sale_price) * item.amount,
         0
       )
+      return parseFloat(result?.toFixed(2))
     },
     totalPrice(state) {
-      return state.cart?.games?.reduce(
-        (acc, item) => acc + parseFloat(item.game.price) * item.amount,
+      const result = state.cart?.games?.reduce(
+        (acc, item) => acc + item.game.price * item.amount,
         0
       )
+      return parseFloat(result?.toFixed(2))
     },
     isLoading(state) {
       return state.isLoading
