@@ -87,6 +87,7 @@ export default {
       return !this.form
     },
   },
+  //TODO: add reset password redirect + email form error alert
   methods: {
     ...mapActions("auth", ["validateResetToken", "resetPassword"]),
     setMountErrorData(code, msg) {
@@ -101,10 +102,9 @@ export default {
       if (!this.form) return
       console.log(111)
 
-      const { userId, token } = this.$route.params
+      const { token } = this.$route.params
       try {
         await this.resetPassword({
-          userId,
           token,
           newPassword: this.newPassword.value,
           confirmPassword: this.confirmPassword.value,
@@ -121,10 +121,9 @@ export default {
     },
   },
   async beforeMount() {
-    const { userId, token } = this.$route.params
-    console.log(userId)
+    const { token } = this.$route.params
 
-    const resObj = await this.validateResetToken({ userId, token })
+    const resObj = await this.validateResetToken({ token })
     console.log(resObj)
 
     if (resObj.isTokenValid) {

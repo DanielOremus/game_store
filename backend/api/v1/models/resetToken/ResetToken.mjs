@@ -17,4 +17,4 @@ const tokenSchema = {
   },
 }
 
-export default mongoose.model("ResetToken", tokenSchema)
+export default mongoose.model("reset_token", tokenSchema)

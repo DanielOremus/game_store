@@ -39,11 +39,11 @@ router.post(
   checkSchema(UserValidator.updateEmailSchema),
   UserController.generateEmailUpdateToken
 )
-// router.put(
-//   "/update-email/confirmation",
-//   ensureAuthenticated,
-//   checkSchema(UserValidator.emailConfirmationSchema)
-// )
+router.put(
+  "/update-email/confirmation",
+  ensureAuthenticated,
+  UserController.updateProfileEmail
+)
 
 router.put(
   "/update/:id",

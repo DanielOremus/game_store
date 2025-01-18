@@ -76,7 +76,9 @@ const gameSchema = new Schema(
 )
 
 gameSchema.virtual("sale_price").get(function () {
-  return Math.ceil(this.price * (1 - this.sale)) - 0.01
+  let salePrice = this.price * (1 - this.sale)
+  if (this.sale > 0) salePrice = Math.ceil(salePrice) - 0.01
+  return salePrice
 })
 
 gameSchema.post("findOneAndDelete", function (doc) {

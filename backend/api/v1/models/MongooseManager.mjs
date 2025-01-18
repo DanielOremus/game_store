@@ -115,12 +115,16 @@ class MongooseManager {
       throw new Error("Error deleting items by filters: " + error.message)
     }
   }
-  async updateById(id, itemObj) {
+  async updateById(id, itemObj, populateFields = []) {
     try {
-      return await this.model.findByIdAndUpdate(id, itemObj, {
+      const query = this.model.findByIdAndUpdate(id, itemObj, {
         runValidators: true,
         new: true,
       })
+
+      this.addPopulation(query, populateFields)
+      const item = await query.exec()
+      return item
     } catch (error) {
       throw new Error("Error updating item by id: " + error.message)
     }

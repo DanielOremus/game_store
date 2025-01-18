@@ -3,6 +3,7 @@
     class="w-100"
     validate-on="input"
     v-model="isDataValid"
+    ref="formElement"
     @submit.prevent="onChangePassword"
   >
     <v-container>
@@ -80,8 +81,7 @@ export default {
   methods: {
     ...mapActions("profile", ["updateUserPassword"]),
     clearPasswordFields() {
-      this.oldPassword.value = ""
-      this.newPassword.value = ""
+      this.$refs.formElement.reset()
     },
 
     async onChangePassword() {

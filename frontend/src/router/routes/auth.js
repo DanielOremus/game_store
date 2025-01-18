@@ -44,7 +44,7 @@ export default [
         },
       },
       {
-        path: "reset-password/:userId/:token",
+        path: "reset-password/:token",
         name: "ResetPasswordLink",
         component: ResetWrapper,
         props: true,

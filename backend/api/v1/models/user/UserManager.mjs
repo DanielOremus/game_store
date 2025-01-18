@@ -35,6 +35,14 @@ class UserManager extends MongooseManager {
       throw error
     }
   }
+  async updateById(id, userObj) {
+    try {
+      const user = await super.updateById(id, userObj, ["role"])
+      return user
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
 export default new UserManager(User)

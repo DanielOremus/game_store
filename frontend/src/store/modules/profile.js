@@ -27,9 +27,9 @@ export default {
     },
     setProfile(state, payload) {
       const { role, ...data } = payload
-      console.log(data)
-
-      state.role = { id: role._id, title: role.title }
+      if (role) {
+        state.role = { id: role._id, title: role.title }
+      }
       for (const key in data) {
         state[key] = data[key]
       }
@@ -95,11 +95,23 @@ export default {
       console.debug("email link payload")
       console.debug(payload)
       try {
-        const response = await axios.post(
-          apiEndpoints.user.generateEmailUpdateLink,
-          payload,
+        await axios.post(apiEndpoints.user.generateEmailUpdateLink, payload, {
+          withCredentials: true,
+        })
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async updateUserEmail({ commit }, token) {
+      try {
+        const response = await axios.put(
+          apiEndpoints.user.updateEmail,
+          { token },
           { withCredentials: true }
         )
+        const resData = response.data
+        commit("setProfile", { email: resData.data.user.email })
       } catch (error) {
         console.log(error)
         throw error

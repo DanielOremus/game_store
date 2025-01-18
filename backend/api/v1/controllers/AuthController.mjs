@@ -144,7 +144,7 @@ class AuthController {
           token: crypto.randomBytes(32).toString("hex"),
         })
       }
-      const resetLink = `${config.clientBase}/auth/reset-password/${user.id}/${resetToken.token}`
+      const resetLink = `${config.clientBase}/auth/reset-password/${resetToken.token}`
       const letterContent = await ejs.renderFile("views/resetPassword.ejs", {
         firstName: user.firstName,
         link: resetLink,
@@ -161,10 +161,9 @@ class AuthController {
   }
 
   static async validateResetToken(req, res) {
-    const { userId, token } = req.body
+    const { token } = req.body
     try {
       const exists = await ResetTokenManager.findOne({
-        userId: { $eq: userId },
         token: { $eq: token },
       })
       if (!exists)
@@ -182,10 +181,9 @@ class AuthController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() })
     }
-    const { newPassword, userId, token } = req.body
+    const { newPassword, token } = req.body
     try {
       const exists = await ResetTokenManager.findOne({
-        userId: { $eq: userId },
         token: { $eq: token },
       })
       if (!exists)
@@ -193,7 +191,7 @@ class AuthController {
           .status(400)
           .json({ success: false, msg: "Invalid link or expired" })
 
-      await UserManager.updateById(userId, { password: newPassword })
+      await UserManager.updateById(exists.userId, { password: newPassword })
       await ResetTokenManager.deleteOne({ token: { $eq: token } })
       res.json({ success: true, msg: "Password has been changed successfully" })
     } catch (error) {

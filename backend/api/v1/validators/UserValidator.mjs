@@ -11,7 +11,7 @@ class UserValidator {
         options: async (value) => {
           try {
             const user = await UserManager.findOne(
-              { email: { $eq: value } },
+              { email: { $eq: value.toLowerCase() } },
               { _id: 1 }
             )
             if (user) {
@@ -103,7 +103,7 @@ class UserValidator {
         options: async (value) => {
           try {
             const isEmailTaken = await UserManager.findOne(
-              { email: { $eq: value } },
+              { email: { $eq: value.toLowerCase() } },
               { _id: 1 }
             )
             if (isEmailTaken) {

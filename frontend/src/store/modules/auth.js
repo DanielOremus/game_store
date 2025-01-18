@@ -119,7 +119,7 @@ export default {
       }
     },
     async resetPassword({ commit }, payload) {
-      //const { userId, token, newPassword, confirmPassword } = payload
+      //const { token, newPassword, confirmPassword } = payload
       try {
         await axios.post(apiEndpoints.auth.resetPassword, payload)
         console.log("Password was successfully changed")

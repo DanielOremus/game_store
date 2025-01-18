@@ -7,6 +7,9 @@ import crypto from "crypto"
 import sendEmail from "../../../utils/sendEmail.mjs"
 import config from "../../../config/default.mjs"
 import ejs from "ejs"
+
+import DocumentHelper from "../../../utils/documentHelper.mjs"
+
 class UserController {
   static async getAllProfiles(req, res) {
     try {
@@ -65,8 +68,7 @@ class UserController {
         password,
         role,
       })
-      const userResponse = user.toObject()
-      delete userResponse.password
+      const userResponse = DocumentHelper.takeOutFields(["password"], user)
       res.status(201).json({ success: true, data: { user: userResponse } })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
@@ -103,17 +105,14 @@ class UserController {
           .json({ success: false, msg: "User by id not found" })
       }
 
-      await user.populate("role")
-      const userResponse = user.toObject()
-      delete userResponse.password
+      const userResponse = DocumentHelper.takeOutFields(["password"], user)
       res.status(200).json({ success: true, data: { user: userResponse } })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
     }
   }
   static async updateProfileEmail(req, res) {
-    const { token } = req.params
-
+    const { token } = req.body
     try {
       const updateToken = await EmailTokenManager.findOne({
         token: { $eq: token },
@@ -130,7 +129,10 @@ class UserController {
       //Deleting token after it was used
       await EmailTokenManager.deleteById(updateToken._id)
 
-      res.status(200).json({ success: true, data: { user: userResponse } })
+      res.status(200).json({
+        success: true,
+        data: { user: { _id: user._id, email: user.email } },
+      })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })
     }
