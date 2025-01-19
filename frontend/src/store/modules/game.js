@@ -14,7 +14,7 @@ export default {
     }*/
     homePageGames: {},
     currentPageGames: [],
-    perPage: 8,
+    perPage: 9,
     currentPage: 0,
     totalGamesCount: 0,
     isLoading: false,
@@ -25,7 +25,9 @@ export default {
       return state.currentPageGames
     },
     homePageGames: (state) => (category) => state.homePageGames[category] || [],
-
+    currentPage(state) {
+      return state.currentPage
+    },
     perPage(state) {
       return state.perPage
     },
@@ -35,19 +37,26 @@ export default {
     currentGame(state) {
       return state.currentGame
     },
+    totalGamesCount(state) {
+      return state.totalGamesCount
+    },
   },
   mutations: {
     setHomePageGames(state, { category, list }) {
       state.homePageGames[category] = list
     },
     addGamesToCurrentPage(state, gamesList) {
-      state.currentPageGames = [...state.currentPageGames, ...gamesList]
+      state.currentPageGames.push(...gamesList)
+    },
+    setCurrentPageGames(state, gamesList) {
+      state.currentPageGames = gamesList
     },
     setTotalGamesCount(state, count) {
       state.totalGamesCount = count
     },
-    setCurrentPage(state, pageNumber) {
-      state.currentPage = pageNumber
+    setPageData(state, data) {
+      state.currentPage = parseInt(data.currentPage)
+      state.perPage = parseInt(data.perPage)
     },
     resetPageGames(state) {
       state.currentPageGames = []
@@ -76,19 +85,22 @@ export default {
         commit("setLoading", false)
       }
     },
-    async fetchGames({ commit }, payload = {}) {
+    async fetchGames({ commit }, payload) {
+      const { query, isNew } = payload
+      if (isNew) {
+        commit("resetPageGames")
+      }
       commit("setLoading", true)
-
       try {
         const response = await axios.get(apiEndpoints.game.fetchGames, {
-          params: {
-            ...payload,
-          },
+          params: query,
         })
         const resData = response.data
-        const { count, games } = resData.data
+        const { count, games, currentPage, perPage } = resData.data
+
         commit("addGamesToCurrentPage", games)
         commit("setTotalGamesCount", count)
+        commit("setPageData", { currentPage, perPage })
       } catch (error) {
         console.log(error)
       } finally {

@@ -1,6 +1,8 @@
 export default [
   {
-    path: "/games",
+    path: "/games/search",
+    name: "GamesList",
+    component: () => import("@/views/game/ListPage.vue"),
     meta: {
       pageCategory: "games",
       pagePermission: "read",

@@ -23,7 +23,6 @@ class MongooseManager {
       this.addPopulation(query, populateFields)
 
       const documents = await query.exec()
-      console.log(documents)
 
       return {
         documents,
@@ -41,8 +40,6 @@ class MongooseManager {
     populateFields
   ) {
     try {
-      console.log(this.model)
-
       let query = this.model.find({}, projection)
       query = SelectionHelper.applyFiltersSelection(
         reqQuery,
@@ -57,7 +54,6 @@ class MongooseManager {
       this.addPopulation(query, populateFields)
 
       const documents = await query.exec()
-      console.log(documents)
 
       return { documents, count }
     } catch (error) {

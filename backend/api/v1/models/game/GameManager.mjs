@@ -16,6 +16,10 @@ class GameManager extends MongooseManager {
       filterCategory: "list",
     },
     {
+      fieldName: "genre",
+      filterCategory: "list",
+    },
+    {
       fieldName: "category",
       filterCategory: "custom",
     },

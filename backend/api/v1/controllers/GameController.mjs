@@ -4,10 +4,11 @@ import FileManager from "../../../utils/FileManager.mjs"
 
 class GameController {
   static startPage = 0
-  static defaultPerPage = 8
+  static defaultPerPage = 9
   static async getGamesWithQuery(req, res) {
-    if (!isFinite(req.query.page)) req.query.page = GameController.startPage
-    if (!isFinite(req.query.perPage))
+    if (!req.query.page || req.query.page < 0)
+      req.query.page = GameController.startPage
+    if (!req.query.perPage || req.query.perPage < 1)
       req.query.perPage = GameController.defaultPerPage
 
     const reqQuery = req.query
@@ -17,11 +18,15 @@ class GameController {
         { genre: 0, gallerySrc: 0, description: 0 },
         ["platform"]
       )
+      console.log(req.query.page)
+
       res.json({
         success: true,
         data: {
           games: documents,
           count,
+          currentPage: req.query.page,
+          perPage: req.query.perPage,
         },
       })
     } catch (error) {

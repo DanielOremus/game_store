@@ -5,11 +5,10 @@
         {{ title }}
       </span>
     </div>
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular indeterminate></v-progress-circular>
-    </div>
-    <v-row v-else justify-center>
+
+    <v-row justify-center>
       <v-col
+        class="game-card"
         cols="12"
         sm="6"
         md="6"
@@ -19,13 +18,17 @@
       >
         <GameCard :game="game" />
       </v-col>
+
+      <v-col cols="12" class="text-center" v-if="isLoading">
+        <v-progress-circular indeterminate></v-progress-circular>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
 import GameCard from "./card.vue"
-import { mapGetters, mapActions } from "vuex"
+import { mapGetters } from "vuex"
 export default {
   name: "GamesList",
   components: {
