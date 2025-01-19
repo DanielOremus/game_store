@@ -8,6 +8,7 @@
             variant="outlined"
             color="orange-darken-4"
             hide-details
+            clearable
             :items="sortOptions"
             item-title="title"
             item-value="value"
@@ -50,7 +51,7 @@
                 v-if="index === 3"
                 class="text-grey text-caption align-self-center"
               >
-                (+{{ selectedGenres.length - 4 }} others)
+                (+{{ selectedGenres.length - 3 }} others)
               </span>
             </template>
           </v-select>
@@ -167,6 +168,7 @@ export default {
     },
 
     setInitValuesFromQuery() {
+      this.setSortOptionFromQuery()
       this.setSelectedPlatformFromQuery()
       this.setSelectedGenresFromQuery()
       this.setPriceRangeFromQuery()
@@ -180,22 +182,21 @@ export default {
       }
     },
     setSelectedGenresFromQuery() {
-      let queryGenreIds = this.$route.query.genre ?? []
-      queryGenreIds = Array.isArray(queryGenreIds)
-        ? queryGenreIds
-        : queryGenreIds.split(",")
-      const resultQuery = []
-      queryGenreIds.forEach((genreId) => {
-        if (this.allowedGenreIds.includes(genreId)) resultQuery.push(genreId)
+      let queryGenreIds = this.$route.query.genre
+      queryGenreIds = queryGenreIds?.split(",")
+      queryGenreIds?.forEach((genreId) => {
+        if (this.allowedGenreIds.includes(genreId))
+          this.selectedGenres.push(genreId)
       })
-      this.selectedGenres.push(...resultQuery)
     },
     setPriceRangeFromQuery() {
-      const queryPriceRange = this.$route.query.price
+      let queryPriceRange = this.$route.query.price
+      if (!queryPriceRange) return
       let gte, lte
       if (queryPriceRange.includes("-")) {
         ;[gte, lte] = queryPriceRange.split("-").map((el) => parseFloat(el))
       } else {
+        if (!Array.isArray(queryPriceRange)) queryPriceRange = [queryPriceRange]
         queryPriceRange.forEach((el) => {
           if (el.startsWith("gte:")) gte = parseFloat(el.slice(4))
           if (el.startsWith("lte:")) lte = parseFloat(el.slice(4))
@@ -214,6 +215,15 @@ export default {
         range.push(this.rangeMaxPrice)
       }
       this.priceRange = range
+    },
+    setSortOptionFromQuery() {
+      const querySortOption = this.$route.query.sort
+      const isValid = this.sortOptions.some(
+        (el) => el.value === querySortOption
+      )
+      if (isValid) {
+        this.selectedSortOption = querySortOption
+      }
     },
     async addPriceQueryToUrl() {
       let resultRange = []
@@ -240,7 +250,14 @@ export default {
     async addGenreQueryToUrl() {
       await this.setQuery("genre", this.selectedGenres)
     },
+    async addSortOptionToUrl() {
+      await this.setQuery(
+        "sort",
+        this.selectedSortOption ? [this.selectedSortOption] : []
+      )
+    },
     async onApplyFilters() {
+      await this.addSortOptionToUrl()
       await this.addPlatformQueryToUrl()
       await this.addPriceQueryToUrl()
       await this.addGenreQueryToUrl()
@@ -248,6 +265,7 @@ export default {
     },
     async onResetFilters() {
       await this.$router.push({ path: this.$route.path })
+      this.selectedSortOption = null
       this.selectedGenres = []
       this.selectedPlatform = null
       this.priceRange = [initMinPrice, initMaxPrice]
