@@ -7,6 +7,7 @@
         :is="FilterPanel"
         :platforms="platforms"
         :genres="genres"
+        :sort-options="sortOptions"
         @filters-apply="onApplyFilters"
       >
       </component>
@@ -16,6 +17,28 @@
 </template>
 
 <script>
+const sortOptions = [
+  {
+    title: "Discount: Best",
+    value: "sale:desc",
+  },
+  {
+    title: "Price: Low to High",
+    value: "price:asc",
+  },
+  {
+    title: "Price: High to Low",
+    value: "price:desc",
+  },
+  {
+    title: "Release: Recent",
+    value: "releaseDate:desc",
+  },
+  {
+    title: "Release: Old",
+    value: "releaseDate:asc",
+  },
+]
 import MainMasterPage from "@/layouts/MainMasterPage.vue"
 import GamesList from "@/components/games/list.vue"
 // import FilterPanel from ""
@@ -84,6 +107,9 @@ export default {
         import("@/components/games/filterPanel.vue")
       )
     },
+    sortOptions() {
+      return sortOptions
+    },
   },
   mounted() {
     this.fetchAllPlatforms()
@@ -102,7 +128,7 @@ export default {
   padding-inline: 2rem;
 }
 .main-container {
-  margin-top: 3rem;
+  margin-top: 4rem;
   margin-inline: 4rem;
 }
 </style>
