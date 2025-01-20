@@ -150,6 +150,7 @@ export default {
       selectedGenres: [],
       priceRange: [initMinPrice, initMaxPrice],
       selectedSortOption: null,
+      searchValue: null,
     }
   },
   methods: {
@@ -168,11 +169,15 @@ export default {
     },
 
     setInitValuesFromQuery() {
+      this.setSearchValueFromQuery()
       this.setSortOptionFromQuery()
       this.setSelectedPlatformFromQuery()
       this.setSelectedGenresFromQuery()
       this.setPriceRangeFromQuery()
       this.setPriceRangeFromQuery()
+    },
+    setSearchValueFromQuery() {
+      this.searchValue = this.$route.query.name
     },
     setSelectedPlatformFromQuery() {
       const queryPlatformId = this.$route.query.platform
@@ -225,6 +230,7 @@ export default {
         this.selectedSortOption = querySortOption
       }
     },
+
     async addPriceQueryToUrl() {
       let resultRange = []
       const [gte, lte] = this.priceRange
@@ -265,11 +271,14 @@ export default {
     },
     async onResetFilters() {
       await this.$router.push({ path: this.$route.path })
+      this.resetFilterFields()
+      this.$emit("filters-apply")
+    },
+    resetFilterFields() {
       this.selectedSortOption = null
       this.selectedGenres = []
       this.selectedPlatform = null
       this.priceRange = [initMinPrice, initMaxPrice]
-      this.$emit("filters-apply")
     },
   },
   computed: {
@@ -293,6 +302,13 @@ export default {
     },
     rangeMinPrice() {
       return Math.max(this.minPrice, this.priceRange[0])
+    },
+  },
+  watch: {
+    "$route.query.name"(newValue) {
+      this.searchValue = newValue
+      this.resetFilterFields()
+      this.$emit("search-apply")
     },
   },
   mounted() {

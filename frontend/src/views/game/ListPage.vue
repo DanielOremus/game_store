@@ -9,6 +9,7 @@
         :genres="genres"
         :sort-options="sortOptions"
         @filters-apply="onApplyFilters"
+        @search-apply="onSearchApply"
       >
       </component>
       <GamesList :games="currentPageGames" fluid />
@@ -84,6 +85,9 @@ export default {
     },
     onApplyFilters() {
       this.fetchGames({ query: this.$route.query, isNew: true })
+    },
+    onSearchApply() {
+      this.fetchGames({ query: { name: this.$route.query.name }, isNew: true })
     },
   },
   computed: {

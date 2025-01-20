@@ -2,7 +2,6 @@ export const getPermissionChecker = (model) => (requiredPermission) => {
   return (req, res, next) => {
     if (!req.user)
       return res.status(401).json({ success: false, msg: "Unauthorized" })
-    console.log(req.user)
     if (req.skipPermissionCheck) return next()
 
     const hasPermission =

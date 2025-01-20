@@ -33,6 +33,7 @@
             </v-icon>
             Epic Games
           </span>
+
           <span class="platform">
             <v-icon
               icon="mdi-ubisoft"
@@ -41,8 +42,31 @@
             ></v-icon>
             Uplay
           </span>
-          <div class="search-container">
-            <SearchIcon class="search-icon" />
+          <div
+            :class="{ 'searching-state': searchingState }"
+            class="search-container"
+          >
+            <input
+              variant="plain"
+              color="white"
+              class="search-input"
+              placeholder="Buckshot, Minecraft..."
+              hide-details
+              v-model.trim.lazy="searchValue"
+            />
+
+            <div class="close-search" @click="searchingState = false">
+              <v-icon icon="mdi-close"></v-icon>
+            </div>
+            <span
+              class="search-link"
+              @click="$router.push({ name: 'GamesList' })"
+            >
+              <a>Advanced Search</a>
+            </span>
+            <div class="search-icon-container" @click="searchingState = true">
+              <SearchIcon class="search-icon" />
+            </div>
           </div>
         </li>
         <li class="header-section d-flex align-center ga-6">
@@ -111,6 +135,7 @@
 </template>
 
 <script>
+//TODO: add search with header platforms
 import EpicGamesIcon from "@/assets/icons/epic-games.svg"
 import CartIcon from "@/assets/icons/cart.svg"
 import ProfileIcon from "@/assets/icons/profile.svg"
@@ -135,6 +160,8 @@ export default {
   data() {
     return {
       isScrolled: false,
+      searchValue: this.$route.query.name,
+      searchingState: false,
     }
   },
   computed: {
@@ -156,6 +183,13 @@ export default {
       this.$router.push({ name: "Profile" })
     },
   },
+  watch: {
+    searchValue(newValue) {
+      console.log(1)
+      let queryValue = newValue ? newValue : undefined
+      this.$router.push({ name: "GamesList", query: { name: queryValue } })
+    },
+  },
   mounted() {
     document.addEventListener("scroll", this.handleScroll)
   },
@@ -166,183 +200,92 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.header {
-  transition: background-color 0.3s ease;
-  height: 6rem;
+@import url("/styles/header.css");
+
+.searching-state,
+.header.scrolled .searching-state {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 2rem;
+  cursor: auto;
+}
+
+.searching-state .search-input-container {
   display: flex;
   align-items: center;
-  nav {
-    width: 100%;
-  }
-  .list {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    padding-inline: 2.5rem;
-    align-items: center;
-  }
 }
-.header-section:nth-child(2) {
-  transition: transform ease 0.3s;
-  transform: translateY(2rem);
 
-  padding: 1.3rem 1rem;
-  height: 5rem;
-  border-radius: 9999px;
-  font-size: 1.2rem;
-  backdrop-filter: blur(20px);
-  background-color: rgba(0, 0, 0, 0.25);
-  text-align: center;
-  padding-right: 5rem;
-
-  .search-container {
-    vertical-align: middle;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 9999px;
-    height: 3rem;
-    width: 3rem;
-    position: absolute;
-    transform: scale(1.65);
-    transition: transform 0.3s ease;
-    top: 50%;
-    right: 0;
-    translate: 0 -50%;
-    background: rgb(255, 209, 76);
-    background: linear-gradient(
-      11deg,
-      rgba(255, 209, 76, 1) 0%,
-      rgba(255, 87, 0, 1) 100%
-    );
-    cursor: pointer;
-    .search-icon {
-      width: 15px;
-      height: 15px;
-      color: white;
-
-      z-index: 1;
-    }
-  }
-}
-.platform {
-  cursor: pointer;
-  position: relative;
-  padding: 0.9rem 1rem;
-}
-.platform::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background-color: rgba(179, 179, 179, 0.332);
-  transition: opacity ease 0.1s;
+.search-link {
+  margin-right: 1rem;
+  transition: opacity 0.2s;
+  text-wrap: nowrap;
   opacity: 0;
-  border-radius: 25px;
 }
-.platform:hover::after {
+.search-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.searching-state .search-link {
   opacity: 1;
 }
-.cart-icon,
-.profile-icon,
-.profile-auth-icon {
-  width: 45px;
-  height: 45px;
-  transition: color ease 0.1s;
-  cursor: pointer;
-  z-index: 1;
-}
-.profile-auth-icon {
-  width: 30px;
-  height: 30px;
-  color: rgb(0, 136, 255);
-}
-.profile-icon-container {
+
+.search-icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-.profile-icon-wrapper {
-  width: inherit;
-  height: inherit;
-  box-sizing: border-box;
-}
-.profile-icon-container.auth {
-  background-color: rgb(12, 12, 12);
-
-  border-radius: 100%;
-  box-sizing: border-box;
-  width: 4rem;
-  height: 4rem;
-  border: 3px solid transparent;
-  transition: border ease 0.1s;
-}
-.profile-icon-container.auth:hover {
-  border: 3px solid rgb(255, 102, 0);
-}
-
-.cart-icon:hover,
-.profile-icon:hover {
-  color: rgb(255, 115, 0);
-}
-
-.header.scrolled {
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
-  .header-section:nth-child(2) {
-    transform: translateY(0);
-    backdrop-filter: none;
-    background: none;
-  }
-  .platform {
-    padding-block: 0.7rem;
-  }
-  .search-container {
-    transform: scale(1.2);
-  }
-}
-.profile-menu {
-  min-width: 300px;
-  width: 300px;
-}
-.item-container {
-  cursor: pointer;
-}
-.item-container > * {
-  z-index: 2;
-}
-.item-container::after {
-  content: "";
+  width: 100%;
+  height: 100%;
+  transition: all 0.2s ease;
+  opacity: 1;
+  flex-shrink: 0;
   position: absolute;
-  transition: opacity ease 0.1s;
-  z-index: 0;
-  top: 50%;
   left: 50%;
-  translate: -50% -50%;
-  border-radius: 1rem;
-  width: 85%;
-  height: 90%;
-  background-color: rgba(173, 173, 173);
+  translate: -50%;
+  z-index: 0;
+}
+.searching-state .search-icon-container {
+  z-index: -1;
+}
+.search-icon {
+  transition: 0.2s ease;
+}
+.search-icon:hover {
+  transform: scale(1.3);
+}
+.header.scrolled .search-icon:hover {
+  transform: scale(1.15);
+}
+.searching-state .search-icon-container {
   opacity: 0;
 }
-.item-container:hover::after {
-  opacity: 0.3;
-}
-.logo {
-  width: 70%;
+.close-search {
+  position: absolute;
   cursor: pointer;
+  transition: opacity 0.2s, color 0.1s;
+  right: -40px;
+  opacity: 0;
+  &:hover {
+    color: rgb(255, 106, 0);
+  }
 }
-.logo-container {
-  display: flex;
-  justify-content: center;
-  max-width: 150px;
+.searching-state .close-search {
+  opacity: 1;
+}
+
+.search-input {
+  font-size: 1.4rem;
+  padding-top: 0;
+  outline: none;
+  width: 50%;
+  opacity: 0;
+  color: white;
+  caret-color: rgba(255, 255, 255, 0.8);
+}
+.searching-state .search-input {
+  opacity: 1;
+}
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 </style>

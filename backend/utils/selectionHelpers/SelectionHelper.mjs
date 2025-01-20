@@ -15,7 +15,7 @@ class SelectionHelper {
           break
         case "search":
           query
-            .where(filterObj.filterObj)
+            .where(filterObj.fieldName)
             .regex(new RegExp(filterObj.filterValue, "i"))
           break
         case "custom":
