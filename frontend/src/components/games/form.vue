@@ -125,16 +125,7 @@
       </v-row>
       <v-row>
         <v-col class="pt-0" cols="12" md="6" lg="6" xl="6">
-          <v-btn
-            color="orange-darken-4"
-            size="large"
-            block
-            @click="
-              $router.push({
-                name: 'SpecificGame',
-                params: { id: currentGame.id },
-              })
-            "
+          <v-btn color="orange-darken-4" size="large" block @click="onBack"
             >Back</v-btn
           >
         </v-col>
@@ -324,6 +315,16 @@ export default {
         switch (response?.statusCode) {
         }
         this.$emit("submit", { success: false })
+      }
+    },
+    onBack() {
+      if (this.currentGame?.id) {
+        this.$router.push({
+          name: "SpecificGame",
+          params: { id: this.currentGame.id },
+        })
+      } else {
+        this.$router.go(-1)
       }
     },
   },

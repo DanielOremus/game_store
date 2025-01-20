@@ -11,6 +11,48 @@
           </div>
         </li>
         <li class="header-section">
+          <span
+            v-for="platform in headerPlatforms"
+            :key="platform._id"
+            class="platform"
+            @click="onPlatform(platform._id)"
+          >
+            <img
+              width="34"
+              height="34"
+              :src="platform.logo"
+              alt="platform-logo"
+            />
+            {{ platform.name }}
+          </span>
+          <div
+            :class="{ 'searching-state': searchingState }"
+            class="search-container"
+          >
+            <input
+              variant="plain"
+              color="white"
+              class="search-input"
+              placeholder="Buckshot, Minecraft..."
+              hide-details
+              v-model.trim.lazy="searchValue"
+            />
+
+            <div class="close-search" @click="searchingState = false">
+              <v-icon icon="mdi-close"></v-icon>
+            </div>
+            <span
+              class="search-link"
+              @click="$router.push({ name: 'GamesList' })"
+            >
+              <a>Advanced Search</a>
+            </span>
+            <div class="search-icon-container" @click="searchingState = true">
+              <SearchIcon class="search-icon" />
+            </div>
+          </div>
+        </li>
+        <!-- <li class="header-section">
           <span class="platform">
             <v-icon
               icon="mdi-steam"
@@ -68,7 +110,7 @@
               <SearchIcon class="search-icon" />
             </div>
           </div>
-        </li>
+        </li> -->
         <li class="header-section d-flex align-center ga-6">
           <CartIcon class="cart-icon" @click="onCart" />
           <div :class="['profile-icon-container', { auth: isAuthenticated }]">
@@ -166,9 +208,12 @@ export default {
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated", "fullName"]),
+    ...mapGetters("platform", ["headerPlatforms"]),
   },
   methods: {
     ...mapActions("auth", ["logout"]),
+    ...mapActions("platform", ["fetchHeaderPlatforms"]),
+
     handleScroll() {
       this.isScrolled = window.scrollY > 0
     },
@@ -182,6 +227,9 @@ export default {
     onProfile() {
       this.$router.push({ name: "Profile" })
     },
+    onPlatform(id) {
+      this.$router.push({ name: "GamesList", query: { platform: id } })
+    },
   },
   watch: {
     searchValue(newValue) {
@@ -192,6 +240,7 @@ export default {
   },
   mounted() {
     document.addEventListener("scroll", this.handleScroll)
+    if (!this.headerPlatforms.length) this.fetchHeaderPlatforms({ perPage: 4 })
   },
   beforeUnmount() {
     window.removeEventListener("scroll", this.handleScroll)

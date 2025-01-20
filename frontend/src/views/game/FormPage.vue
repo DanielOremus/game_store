@@ -22,10 +22,15 @@ export default {
       if (e.success) {
         this.$router.push({ name: "SpecificGame", params: { id: e.id } })
       } else {
+        //TODO: something
       }
     },
   },
 }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.form-container {
+  margin-top: 2rem;
+}
+</style>

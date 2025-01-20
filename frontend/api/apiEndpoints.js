@@ -29,6 +29,7 @@ export default Object.freeze({
     updateAmount: `${API_URI}/carts/update-game-amount`,
   },
   platform: {
+    fetchAllPlatforms: `${API_URI}/platforms/all`,
     fetchPlatforms: `${API_URI}/platforms`,
   },
   genre: {

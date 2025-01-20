@@ -60,7 +60,7 @@ class QueryParser {
       },
     ]
   }
-  static parseFilters(query, fieldsConfig) {
+  static parseFilters(query, fieldsConfig = []) {
     const filters = []
 
     fieldsConfig.forEach(({ fieldName, filterCategory }) => {

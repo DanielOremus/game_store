@@ -37,7 +37,7 @@ class MongooseManager {
     projection,
     fieldsConfig,
     customFiltersConfig = {},
-    populateFields
+    populateFields = []
   ) {
     try {
       let query = this.model.find({}, projection)
