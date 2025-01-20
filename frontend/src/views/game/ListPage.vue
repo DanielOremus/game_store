@@ -12,7 +12,20 @@
         @search-apply="onSearchApply"
       >
       </component>
-      <GamesList :games="currentPageGames" fluid />
+      <GamesList
+        v-show="isLoading || totalGamesCount"
+        :games="currentPageGames"
+        fluid
+      />
+
+      <div
+        v-show="!isLoading && !totalGamesCount"
+        class="flex-grow-1 text-h5 w-100"
+      >
+        <div class="w-100 h-100 d-flex justify-center align-center">
+          Sorry, we couldn't find anything
+        </div>
+      </div>
     </div>
   </MainMasterPage>
 </template>
@@ -132,6 +145,9 @@ export default {
   padding-inline: 2rem;
 }
 .main-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   margin-top: 4rem;
   margin-inline: 4rem;
 }

@@ -310,6 +310,9 @@ export default {
       this.resetFilterFields()
       this.$emit("search-apply")
     },
+    "$route.query.platform"() {
+      this.setSelectedPlatformFromQuery()
+    },
   },
   mounted() {
     this.setInitValuesFromQuery()
