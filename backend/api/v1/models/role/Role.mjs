@@ -31,7 +31,7 @@ const roleSchema = new Schema({
       type: permissionsSchema,
       default: {},
     },
-    users: {
+    carts: {
       type: permissionsSchema,
       default: {},
     },
@@ -39,11 +39,13 @@ const roleSchema = new Schema({
       type: permissionsSchema,
       default: {},
     },
-    carts: {
+    users: {
       type: permissionsSchema,
       default: {},
     },
   },
 })
+
+//TODO: set guest role when user role is deleted
 
 export default mongoose.model("Role", roleSchema)

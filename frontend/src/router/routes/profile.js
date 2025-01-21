@@ -4,9 +4,18 @@ export default [
   {
     path: "/profile",
     component: ProfilePage,
-    name: "Profile",
+    name: "OwnProfile",
     meta: {
       requiresAuth: true,
+    },
+  },
+  {
+    path: "/profile/:id",
+    component: ProfilePage,
+    name: "UserProfile",
+    meta: {
+      pageCategory: "users",
+      pagePermission: "read",
     },
   },
   {

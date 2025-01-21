@@ -133,7 +133,7 @@ export default {
         })
         this.showAlert("success", "Success", "You successfully logged in!")
         setTimeout(() => {
-          this.$router.push({ name: "HomePage" })
+          this.$router.push({ name: "Home" })
         }, 3000)
       } catch (error) {
         const response = error.response

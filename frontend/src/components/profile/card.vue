@@ -12,8 +12,8 @@
       </v-row>
       <v-row v-if="isOwnProfile">
         <PasswordForm
-          :profile-id="profile.id"
           @submit-password-form="emitFormSubmit"
+          :profile-id="profile.id"
         />
       </v-row>
     </v-container>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex"
 import PasswordForm from "./passwordForm.vue"
 import EmailForm from "./emailForm.vue"
 import MainForm from "./mainForm.vue"
@@ -43,8 +44,13 @@ export default {
     },
   },
   computed: {
+    ...mapGetters("auth", ["userId"]),
     isOwnProfile() {
-      return !this.$route.params.id || this.$route.params.id === this.userId
+      //TODO: fix auth changing
+      return (
+        this.$route.name === "OwnProfile" ||
+        this.$route.params.id === this.userId
+      )
     },
   },
 }

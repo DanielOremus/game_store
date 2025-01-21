@@ -1,11 +1,5 @@
 import SelectionHelper from "./SelectionHelper.mjs"
 
-const categoryConfig = {
-  sales: (query) => {
-    query.where("sale").ne(0)
-  },
-}
-
 class GamesHelper extends SelectionHelper {
   static applyFilters(query, filters, categoryConfig) {
     query = super.applyFilters(query, filters)

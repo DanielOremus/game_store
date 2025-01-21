@@ -10,7 +10,7 @@ export default {
     ...mapGetters("auth", ["isAuthenticated"]),
   },
   beforeMount() {
-    if (this.isAuthenticated) this.$router.push({ name: "HomePage" })
+    if (this.isAuthenticated) this.$router.push({ name: "Home" })
   },
 }
 </script>

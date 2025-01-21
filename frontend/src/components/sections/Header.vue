@@ -5,7 +5,7 @@
   >
     <nav>
       <ul class="list">
-        <li class="header-section" @click="$router.push({ name: 'HomePage' })">
+        <li class="header-section" @click="onHome">
           <div class="logo-container">
             <img src="@/assets/images/logo.png" class="logo" alt="logo" />
           </div>
@@ -113,7 +113,10 @@
         </li> -->
         <li class="header-section d-flex align-center ga-6">
           <CartIcon class="cart-icon" @click="onCart" />
-          <div :class="['profile-icon-container', { auth: isAuthenticated }]">
+          <div
+            class="profile-icon-container"
+            :class="{ auth: isAuthenticated }"
+          >
             <ProfileIcon
               v-if="!isAuthenticated"
               class="profile-icon"
@@ -144,10 +147,21 @@
                   color="grey"
                   class="opacity-50 mx-8 mt-1 mb-2"
                 ></v-divider>
-
+                <v-list-item>
+                  <div class="item-container" @click="onHome">
+                    <span class="text-h6 pl-10">Home</span>
+                  </div>
+                </v-list-item>
                 <v-list-item>
                   <div class="item-container" @click="onProfile">
                     <span class="text-h6 pl-10">My Profile</span>
+                  </div>
+                </v-list-item>
+                <!-- TODO: add check for showing section (computed is ready) -->
+                <!-- <v-list-item v-if="showControlSection"> -->
+                <v-list-item v-if="showControlSection">
+                  <div class="item-container" @click="onControlPanel">
+                    <span class="text-h6 pl-10">Control Panel</span>
                   </div>
                 </v-list-item>
                 <v-divider
@@ -209,6 +223,17 @@ export default {
   computed: {
     ...mapGetters("auth", ["isAuthenticated", "fullName"]),
     ...mapGetters("platform", ["headerPlatforms"]),
+    ...mapGetters("permissions", ["pagesPermissions"]),
+
+    showControlSection() {
+      const rolesPermissions = this.pagesPermissions?.roles
+      const gamesPermissions = this.pagesPermissions?.games
+      const userPermissions = this.pagesPermissions?.users
+
+      return (
+        rolesPermissions.read || gamesPermissions.create || userPermissions.read
+      )
+    },
   },
   methods: {
     ...mapActions("auth", ["logout"]),
@@ -224,11 +249,17 @@ export default {
     onCart() {
       this.$router.push({ name: "Cart" })
     },
+    onHome() {
+      this.$router.push({ name: "Home" })
+    },
     onProfile() {
-      this.$router.push({ name: "Profile" })
+      this.$router.push({ name: "OwnProfile" })
     },
     onPlatform(id) {
       this.$router.push({ name: "GamesList", query: { platform: id } })
+    },
+    onControlPanel() {
+      this.$router.push({ name: "ControlPanel" })
     },
   },
   watch: {

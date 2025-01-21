@@ -40,9 +40,13 @@ export default {
         })
         const resData = response.data
 
-        await dispatch("permissions/fetchPermissions", resData.data.user.id, {
-          root: true,
-        })
+        await dispatch(
+          "permissions/fetchUserPermissions",
+          resData.data.user.id,
+          {
+            root: true,
+          }
+        )
 
         commit("setAuthData", resData.data.user)
         commit("setAuthenticatedStatus", true)
@@ -61,9 +65,13 @@ export default {
         })
         const resData = response.data
 
-        await dispatch("permissions/fetchPermissions", resData.data.user.id, {
-          root: true,
-        })
+        await dispatch(
+          "permissions/fetchUserPermissions",
+          resData.data.user.id,
+          {
+            root: true,
+          }
+        )
 
         commit("setAuthData", resData.data.user)
         commit("setAuthenticatedStatus", true)
@@ -86,7 +94,8 @@ export default {
 
         commit("setAuthData", { id: null, fullName: null })
         commit("setAuthenticatedStatus", false)
-        dispatch("permissions/fetchPermissions", null, { root: true })
+        dispatch("permissions/fetchUserPermissions", null, { root: true })
+        dispatch("profile/clearProfile", null, { root: true })
       } catch (error) {
         console.log("Something went wrong")
 
@@ -138,18 +147,20 @@ export default {
         })
         const resData = response.data
         if (resData.success) {
+          await dispatch("permissions/fetchUserPermissions", resData.data.id, {
+            root: true,
+          })
           commit("setAuthenticatedStatus", true)
           commit("setAuthData", {
             id: resData.data.id,
             fullName: resData.data.fullName,
           })
-          dispatch("permissions/fetchPermissions", resData.data.id, {
+        } else {
+          await dispatch("permissions/fetchUserPermissions", null, {
             root: true,
           })
-        } else {
           commit("setAuthenticatedStatus", false)
           commit("setAuthData", { id: null, fullName: null })
-          dispatch("permissions/fetchPermissions", null, { root: true })
         }
       } catch (error) {
         console.log("Error while checking auth status")

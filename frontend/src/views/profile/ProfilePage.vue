@@ -19,11 +19,11 @@
         indeterminate
       ></v-progress-circular>
     </div>
-    <v-container class="flex-grow-1 d-flex" v-else>
+    <v-container v-else-if="profile" class="flex-grow-1 d-flex">
       <v-row class="align-self-center">
         <v-col>
           <h1 class="fullname">
-            Hello, <span>{{ profile.fullName }}</span>
+            Hello, <span>{{ profile?.fullName }}</span>
           </h1>
         </v-col>
         <v-col>
@@ -58,11 +58,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("profile", ["profile"]),
     ...mapGetters("profile", { isProfileLoading: "isLoading" }),
+    ...mapGetters("profile", ["profile"]),
+    ...mapGetters("permissions", ["pagesPermissions"]),
+    ...mapGetters("role", ["roleList"]),
+
+    hasRoleUpdatePerm() {
+      return this.pagesPermissions?.users.update
+    },
   },
   methods: {
     ...mapActions("profile", ["fetchProfileById"]),
+    ...mapActions("role", ["fetchAllRoles", "setRoleList"]),
 
     showAlert(type, title, text) {
       this.alert.type = type
@@ -75,8 +82,14 @@ export default {
       this.showAlert(type, title, text)
     },
   },
-  mounted() {
-    this.fetchProfileById()
+  async mounted() {
+    await this.fetchProfileById(this.$route.params.id)
+    if (this.hasRoleUpdatePerm) {
+      this.fetchAllRoles()
+    } else {
+      const { id, ...roleObj } = this.profile.role
+      this.setRoleList([{ _id: id, ...roleObj }])
+    }
   },
 }
 </script>

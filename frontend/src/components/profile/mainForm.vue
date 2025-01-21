@@ -74,6 +74,7 @@ export default {
           getFieldValidationFunc(ProfileValidator.mainSchema, "firstName"),
         ],
       },
+
       lastName: {
         value: this.profile.lastName,
         rules: [
@@ -81,7 +82,7 @@ export default {
         ],
       },
       role: {
-        value: this.profile.role?.id,
+        value: this.profile.role.id,
         rules: [],
       },
     }
@@ -96,7 +97,6 @@ export default {
   },
   methods: {
     ...mapActions("profile", ["updateProfileById"]),
-    ...mapActions("role", ["fetchAllRoles"]),
     async onUpdateProfile() {
       try {
         await this.updateProfileById({
@@ -117,7 +117,9 @@ export default {
     },
   },
   mounted() {
-    this.fetchAllRoles()
+    console.log(this.roleList)
+
+    console.log(this.profile)
   },
 }
 </script>

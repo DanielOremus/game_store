@@ -4,48 +4,33 @@ import apiEndpoints from "../../../api/apiEndpoints"
 export default {
   namespaced: true,
   state: () => ({
-    permissions: null,
+    pagesPermissions: null,
   }),
   getters: {
     pagesPermissions(state) {
-      const permissions = state.permissions
-      //   || JSON.parse(localStorage.getItem("permissions"))
-      // console.log(permissions)
-
-      return permissions
+      return state.pagesPermissions
     },
   },
   mutations: {
-    setPermissions(state, data) {
-      state.permissions = data.pagesPermissions
-      // localStorage.setItem("permissions", JSON.stringify(data.pagesPermissions))
-    },
-    clearPermissions(state) {
-      state.permissions = {}
-      localStorage.removeItem("permissions")
+    setPagesPermissions(state, list) {
+      state.pagesPermissions = list
     },
   },
   actions: {
-    async fetchPermissions({ commit }, userId) {
+    async fetchUserPermissions({ commit }, userId) {
       try {
         const response = await axios.get(
-          apiEndpoints.auth.getPermissions(userId),
+          apiEndpoints.role.fetchRoleByUserId(userId),
           {
             withCredentials: true,
           }
         )
         const resData = response.data
-        if (!resData.success) {
-          return
-        }
-        commit("setPermissions", resData.data)
+        commit("setPagesPermissions", resData.data.role.pagesPermissions)
       } catch (error) {
         console.log("Something went wrong")
         console.log(error)
       }
-    },
-    clearPermissions({ commit }) {
-      commit("clearPermissions")
     },
   },
 }

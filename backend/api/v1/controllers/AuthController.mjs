@@ -90,32 +90,7 @@ class AuthController {
       })
     })(req, res)
   }
-  static async getPagesPermissions(req, res) {
-    const userId = req.params.id
-    try {
-      if (!userId) {
-        const guestRole = await RoleManager.findOne({ title: "Guest" })
-        return res.json({
-          success: true,
-          data: { pagesPermissions: guestRole.pagesPermissions },
-        })
-      }
-      const user = await UserManager.findById(userId, {}, ["role"])
-      if (!user)
-        return res.status(404).json({ success: false, msg: "User not found" })
-      res.json({
-        success: true,
-        data: {
-          pagesPermissions: user.role.pagesPermissions,
-        },
-      })
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        msg: error.message,
-      })
-    }
-  }
+
   static async logout(req, res) {
     try {
       await logoutAsync(req)

@@ -255,7 +255,7 @@ export default {
     async deleteCallback() {
       try {
         await this.deleteGameById(this.game._id)
-        this.$router.push({ name: "HomePage" })
+        this.$router.push({ name: "Home" })
       } catch (error) {}
     },
     async onAddToCart() {

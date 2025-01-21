@@ -3,7 +3,7 @@ import authRoutes from "./routes/auth"
 import gameRoutes from "./routes/game"
 import cartRoutes from "./routes/cart"
 import profileRoutes from "./routes/profile"
-
+import adminRoutes from "./routes/admin"
 import HomePage from "@/views/HomePage.vue"
 import store from "@/store"
 
@@ -12,13 +12,9 @@ const isAuthenticated = () => store.getters["auth/isAuthenticated"]
 const routes = [
   {
     path: "/",
-    name: "HomePage",
+    name: "Home",
     component: HomePage,
     meta: { pageTitle: "GameStore" },
-  },
-  {
-    path: "/:category",
-    name: "",
   },
   {
     path: "/:pathMatch(.*)*",
@@ -32,6 +28,7 @@ const routes = [
   ...gameRoutes,
   ...cartRoutes,
   ...profileRoutes,
+  ...adminRoutes,
 ]
 
 const router = createRouter({
@@ -49,7 +46,7 @@ router.beforeEach(async (to, from) => {
   }
   if (to.meta.requiresNotAuth) {
     if (!isAuthenticated()) return true
-    return router.push({ name: "HomePage" })
+    return router.push({ name: "Home" })
   }
 
   const pagesPermissions = store.getters["permissions/pagesPermissions"]

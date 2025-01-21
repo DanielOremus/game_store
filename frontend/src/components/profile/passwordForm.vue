@@ -52,7 +52,6 @@ export default {
     profileId: {
       type: String,
       default: "",
-      required: true,
     },
   },
   data() {

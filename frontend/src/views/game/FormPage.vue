@@ -1,5 +1,5 @@
 <template>
-  <MainMasterPage>
+  <MainMasterPage :is-header-scrolled="true">
     <Form @submit-event="submitCallback" />
   </MainMasterPage>
 </template>

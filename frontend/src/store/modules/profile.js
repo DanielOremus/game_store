@@ -15,7 +15,7 @@ export default {
   getters: {
     profile(state) {
       const { firstName, lastName, email, role, id, fullName } = state
-      return { firstName, lastName, email, role, id, fullName }
+      return id ? { firstName, lastName, email, role, id, fullName } : null
     },
     isLoading(state) {
       return state.isLoading
@@ -26,7 +26,7 @@ export default {
       state.isLoading = status
     },
     setProfile(state, payload) {
-      const { role, ...data } = payload
+      const { role, isLoading, ...data } = payload
       if (role) {
         state.role = { id: role._id, title: role.title }
       }
@@ -34,9 +34,17 @@ export default {
         state[key] = data[key]
       }
     },
+    clearProfile(state) {
+      const { isLoading, ...data } = state
+      for (const key in data) {
+        state[key] = null
+      }
+    },
   },
   actions: {
     async fetchProfileById({ commit, rootGetters }, userId) {
+      console.log(userId)
+
       userId = userId ?? rootGetters["auth/userId"]
       commit("setLoading", true)
       try {
@@ -116,6 +124,9 @@ export default {
         console.log(error)
         throw error
       }
+    },
+    clearProfile({ commit }) {
+      commit("clearProfile")
     },
   },
 }

@@ -7,7 +7,7 @@
         class="mt-3"
         color="grey-darken-2"
         size="large"
-        @click="$router.push({ name: 'HomePage' })"
+        @click="$router.push({ name: 'Home' })"
       >
         Back to Home</v-btn
       >

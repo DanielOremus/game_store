@@ -9,10 +9,6 @@ export default Object.freeze({
     generateResetToken: `${API_URI}/auth/reset-password/sendLink`,
     validateResetToken: `${API_URI}/auth/reset-password/validate-token`,
     resetPassword: `${API_URI}/auth/reset-password`,
-    getPermissions: (userId) =>
-      userId
-        ? `${API_URI}/auth/${userId}/get-permissions`
-        : `${API_URI}/auth/get-guest-permissions`,
   },
   game: {
     fetchGames: `${API_URI}/games`,
@@ -44,5 +40,10 @@ export default Object.freeze({
   },
   role: {
     fetchRoles: `${API_URI}/roles`,
+    fetchRoleByUserId: (userId) =>
+      userId ? `${API_URI}/roles/${userId}` : `${API_URI}/roles/guest`,
+    createRole: `${API_URI}/roles`,
+    updateRoleById: (id) => `${API_URI}/roles/${id}`,
+    deleteRoleById: (id) => `${API_URI}/roles/${id}`,
   },
 })
