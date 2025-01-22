@@ -14,37 +14,48 @@ export default {
     MainMasterPage,
     usersList,
   },
-  data() {
-    return {
-      users: [
-        {
-          _id: "67699d63ec8118914fa59447",
-          fullName: "Adbul Habib",
-          role: { title: "Guest" },
-        },
-        {
-          _id: "6761d10d3a094a043b19ba02",
-          fullName: "Mitz Cannon",
-          role: { title: "Root" },
-        },
-        {
-          _id: "6787420b653d5af5c468312e",
-          fullName: "Mitz1 Cannon1",
-          role: { title: "Manager" },
-        },
-      ],
-    }
-  },
   methods: {
     ...mapActions("user", ["fetchUsers"]),
+    onScroll() {
+      if (this.isLoading || this.noMoreUsers || !this.isNearToBottom) return
+      console.log(111)
+
+      this.fetchUsers({
+        query: {
+          page: this.pageData.currentPage + 1,
+          perPage: this.pageData.perPage,
+        },
+        isNew: false,
+      })
+    },
   },
   computed: {
-    ...mapGetters("user", ["usersList"]),
+    ...mapGetters("user", [
+      "usersList",
+      "isLoading",
+      "totalUsersCount",
+      "pageData",
+    ]),
+    noMoreUsers() {
+      return this.usersList.length >= this.totalUsersCount
+    },
+    isNearToBottom() {
+      return (
+        window.innerHeight + window.scrollY > document.body.offsetHeight - 300
+      )
+    },
   },
   mounted() {
-    this.fetchUsers({ query: { page: 0, perPage: 9 }, isNew: true })
+    this.fetchUsers({
+      query: { page: 0, perPage: this.pageData.perPage },
+      isNew: true,
+    })
+    window.addEventListener("scroll", this.onScroll)
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.onScroll)
   },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="css" scoped></style>

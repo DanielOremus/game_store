@@ -7,7 +7,7 @@ export default {
     usersList: [],
     isLoading: false,
     currentPage: 0,
-    perPage: 9,
+    perPage: 15,
     totalUsersCount: 0,
   }),
   getters: {
@@ -16,6 +16,12 @@ export default {
     },
     usersList(state) {
       return state.usersList
+    },
+    pageData(state) {
+      return { currentPage: state.currentPage, perPage: state.perPage }
+    },
+    totalUsersCount(state) {
+      return state.totalUsersCount
     },
   },
   mutations: {
@@ -38,7 +44,7 @@ export default {
       }
     },
     setPageData(state, data) {
-      state.currentPage = parseInt(data.page)
+      state.currentPage = parseInt(data.currentPage)
       state.perPage = parseInt(data.perPage)
     },
     clearCurrentUsers(state) {
@@ -60,7 +66,7 @@ export default {
         commit("pushToCurrentUsers", resData.data.users)
         commit("setTotalUsersCount", resData.data.count)
         commit("setPageData", {
-          page: resData.data.page,
+          currentPage: resData.data.currentPage,
           perPage: resData.data.perPage,
         })
       } catch (error) {

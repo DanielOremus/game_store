@@ -55,7 +55,6 @@ const sortOptions = [
 ]
 import MainMasterPage from "@/layouts/MainMasterPage.vue"
 import GamesList from "@/components/games/list.vue"
-// import FilterPanel from ""
 import { mapActions, mapGetters } from "vuex"
 import { defineAsyncComponent } from "vue"
 export default {
@@ -63,7 +62,6 @@ export default {
   components: {
     MainMasterPage,
     GamesList,
-    // FilterPanel,
   },
   data() {
     return {}

@@ -10,7 +10,7 @@
     <v-card-subtitle class="text-subtitle-1">{{
       user.role.title
     }}</v-card-subtitle>
-    <v-card-actions>
+    <v-card-actions class="d-flex ga-3 mt-10">
       <v-btn class="w-25" variant="flat" color="primary" @click="onEdit"
         >Edit</v-btn
       >
@@ -42,7 +42,7 @@ export default {
   methods: {
     ...mapActions("user", ["deleteUserById"]),
     onEdit() {
-      this.$router.push({ name: "UserProfile", params: { id: this.user_id } })
+      this.$router.push({ name: "UserProfile", params: { id: this.user._id } })
     },
     onDelete() {
       this.$refs.deleteDialog.isActive = true

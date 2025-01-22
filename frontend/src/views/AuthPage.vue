@@ -1,4 +1,12 @@
 <template>
+  <v-btn
+    color="grey-lighten-1"
+    variant="text"
+    icon="mdi-home"
+    class="home-btn"
+    size="large"
+    @click="this.$router.push({ name: 'Home' })"
+  ></v-btn>
   <RouterView />
 </template>
 
@@ -15,4 +23,12 @@ export default {
 }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.home-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  font-size: 1.8rem;
+}
+</style>

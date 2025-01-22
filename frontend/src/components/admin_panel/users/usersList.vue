@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row v-if="!isLoading && users">
+    <v-row>
       <v-col
         v-for="user in users"
         :key="user._id"
@@ -12,7 +12,7 @@
         <userItem :user="user" />
       </v-col>
     </v-row>
-    <v-row v-else="users">
+    <v-row v-if="isLoading">
       <v-col cols="12" class="text-center">
         <v-progress-circular indeterminate></v-progress-circular>
       </v-col>
