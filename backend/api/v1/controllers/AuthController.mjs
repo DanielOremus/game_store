@@ -105,6 +105,10 @@ class AuthController {
 
   static async generateResetToken(req, res) {
     const { email } = req.body
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() })
+    }
     try {
       const user = await UserManager.findOne({ email: { $eq: email } })
       if (!user)

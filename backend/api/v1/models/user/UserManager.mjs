@@ -19,20 +19,22 @@ class UserManager extends MongooseManager {
       return []
     }
   }
-  async findById(id, projection = {}, populateFields = []) {
+  async findManyWithSearchOptions(
+    reqQuery,
+    projection = {},
+    populateFields = []
+  ) {
     try {
-      const user = await super.findById(id, projection, populateFields)
-      return user
+      const { documents, count } = await super.findManyWithQuery(
+        reqQuery,
+        projection,
+        UserManager.fieldsConfig,
+        null,
+        populateFields
+      )
+      return { documents, count }
     } catch (error) {
-      throw error
-    }
-  }
-  async findOne(filters = {}, projection = {}, populateFields = []) {
-    try {
-      const user = await super.findOne(filters, projection, populateFields)
-      return user
-    } catch (error) {
-      throw error
+      return { documents: [], count: 0 }
     }
   }
   async updateById(id, userObj) {

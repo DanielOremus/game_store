@@ -64,7 +64,6 @@ export default {
       default: {},
     },
   },
-  //TODO: add paswsword validation
   data() {
     return {
       isDataValid: false,
@@ -111,15 +110,10 @@ export default {
           text: "Profile was successfully updated",
         })
       } catch (error) {
-        //ADD alert message
+        //TODO: ADD alert message
         console.log(error)
       }
     },
-  },
-  mounted() {
-    console.log(this.roleList)
-
-    console.log(this.profile)
   },
 }
 </script>

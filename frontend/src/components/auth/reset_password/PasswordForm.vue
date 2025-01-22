@@ -1,4 +1,12 @@
 <template>
+  <transition name="slide-y-transition">
+    <Alert
+      ref="alertComponent"
+      :type="alert.type"
+      :title="alert.title"
+      :text="alert.text"
+    />
+  </transition>
   <v-card
     elevation="0"
     class="bg-transparent d-flex flex-column justify-center"
@@ -17,6 +25,7 @@
         @submit.prevent="onReset"
       >
         <v-text-field
+          theme="dark"
           placeholder="New password"
           variant="outlined"
           color="orange-darken-3"
@@ -25,9 +34,11 @@
         >
         </v-text-field>
         <v-text-field
+          theme="dark"
           placeholder="Confirm password"
           variant="outlined"
           color="orange-darken-3"
+          type="password"
           ref="confirmPasswordField"
           v-model="confirmPassword.value"
           :rules="confirmPassword.rules"
@@ -53,13 +64,40 @@
 </template>
 
 <script>
+const alertData = {
+  200: {
+    type: "success",
+    text: "Password was changed successfully! You'll be redirected to Login page",
+    title: "Success",
+  },
+  default: {
+    type: "error",
+    title: "Oops",
+    text: "Something went wrong, please try again later",
+  },
+  400: {
+    type: "warning",
+    title: "Warning",
+    text: "Please check your password validity and try again",
+  },
+}
+
+import Alert from "@/components/alerts/Alert.vue"
 import { mapActions } from "vuex"
 export default {
   name: "PasswordForm",
+  components: {
+    Alert,
+  },
   data() {
     return {
       form: false,
       isTokenValid: false,
+      alert: {
+        type: "",
+        title: "",
+        text: "",
+      },
       newPassword: {
         value: "",
         rules: [
@@ -87,7 +125,6 @@ export default {
       return !this.form
     },
   },
-  //TODO: add reset password redirect + email form error alert
   methods: {
     ...mapActions("auth", ["validateResetToken", "resetPassword"]),
     setMountErrorData(code, msg) {
@@ -96,12 +133,14 @@ export default {
         msg,
       }
     },
+    showAlert(alertObj) {
+      this.alert = { ...alertObj }
+      this.$refs.alertComponent.showAlert()
+    },
 
     async onReset() {
       this.$refs.form.validate()
       if (!this.form) return
-      console.log(111)
-
       const { token } = this.$route.params
       try {
         await this.resetPassword({
@@ -109,9 +148,13 @@ export default {
           newPassword: this.newPassword.value,
           confirmPassword: this.confirmPassword.value,
         })
-        console.log("Yaaaay")
+        this.showAlert(alertData[200])
+        setTimeout(() => {
+          this.$router.push({ name: "Login" })
+        }, 5000)
       } catch (error) {
-        //Do something
+        const responseStatus = error.response?.status
+        this.showAlert(alertData[responseStatus] ?? alertData.default)
       }
     },
   },

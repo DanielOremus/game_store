@@ -30,6 +30,31 @@ class UserController {
       res.status(500).json({ success: false, msg: error.message })
     }
   }
+  static async getUsersWithQuery(req, res) {
+    if (!req.query.page || req.query.page < 0)
+      req.query.page = PlatformController.startPage
+    if (!req.query.perPage || req.query.perPage < 1)
+      req.query.perPage = PlatformController.defaultPerPage
+    try {
+      const { count, documents } = await UserManager.findManyWithSearchOptions(
+        req.query,
+        { password: 0, email: 0 },
+        ["role"]
+      )
+
+      res.json({
+        success: true,
+        data: {
+          users: documents,
+          count,
+          currentPage: req.query.page,
+          perPage: req.query.perPage,
+        },
+      })
+    } catch (error) {
+      res.status(500).json({ success: false, msg: error.message })
+    }
+  }
   static async getProfileById(req, res) {
     const id = req.params.id
     try {
@@ -208,7 +233,7 @@ class UserController {
     }
   }
   static async deleteProfileById(req, res) {
-    const id = req.params.id
+    const id = req.body.id
 
     try {
       const user = await UserManager.deleteById(id)

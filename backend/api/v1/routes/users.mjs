@@ -16,7 +16,7 @@ const router = Router()
 
 router.use(ensureAuthenticated)
 
-router.get("/", checkPermission("read"), UserController.getAllProfiles)
+router.get("/", checkPermission("read"), UserController.getUsersWithQuery)
 
 router.get(
   "/:id",
@@ -61,8 +61,8 @@ router.put(
 )
 
 router.delete(
-  "/:id",
-  skipPermCheckIfOwner("params", "id"),
+  "/",
+  skipPermCheckIfOwner("body", "id"),
   checkPermission("delete"),
   UserController.deleteProfileById
 )

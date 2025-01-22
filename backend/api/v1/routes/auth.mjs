@@ -28,7 +28,11 @@ router.post(
 router.post("/logout", ensureAuthenticated, AuthController.logout)
 
 //TODO: Add email validator
-router.post("/reset-password/sendLink", AuthController.generateResetToken)
+router.post(
+  "/reset-password/sendLink",
+  checkSchema(AuthValidator.resetLinkSchema),
+  AuthController.generateResetToken
+)
 
 router.post("/reset-password/validate-token", AuthController.validateResetToken)
 

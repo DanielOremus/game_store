@@ -9,7 +9,7 @@
 
 <script>
 import MainMasterPage from "@/layouts/MainMasterPage.vue"
-import RolesList from "@/components/admin_panel/rolesList.vue"
+import RolesList from "@/components/admin_panel/roles/rolesList.vue"
 import { mapGetters, mapActions } from "vuex"
 export default {
   components: {

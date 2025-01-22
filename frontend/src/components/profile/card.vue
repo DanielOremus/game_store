@@ -6,6 +6,7 @@
       </v-row>
       <v-row>
         <EmailForm
+          v-if="isOwnProfile"
           @submit-email-form="emitFormSubmit"
           :profile-email="profile.email"
         />
@@ -46,7 +47,6 @@ export default {
   computed: {
     ...mapGetters("auth", ["userId"]),
     isOwnProfile() {
-      //TODO: fix auth changing
       return (
         this.$route.name === "OwnProfile" ||
         this.$route.params.id === this.userId

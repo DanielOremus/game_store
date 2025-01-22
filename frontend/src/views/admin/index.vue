@@ -46,7 +46,7 @@ const cardsData = [
   {
     title: "Users",
     targetRoute: {
-      name: "CreateUsers",
+      name: "UsersPanel",
       params: {},
     },
     requiredPermissions: {

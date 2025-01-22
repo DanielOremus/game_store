@@ -19,4 +19,14 @@ export default [
       pagePermission: "read",
     },
   },
+  {
+    path: "/admin/users",
+    name: "UsersPanel",
+    component: () => import("@/views/admin/UsersPage.vue"),
+    //TODO: add authorization on page component
+    meta: {
+      pageCategory: "users",
+      pagePermission: "read",
+    },
+  },
 ]

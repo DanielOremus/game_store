@@ -36,6 +36,19 @@ class AuthValidator {
       },
     },
   }
+  static resetLinkSchema = {
+    email: {
+      trim: true,
+      notEmpty: {
+        errorMessage: "Email is required",
+        bail: true,
+      },
+      isEmail: {
+        errorMessage: "Oops! That doesn’t look like a valid email address",
+      },
+      normalizeEmail: true,
+    },
+  }
 }
 
 export default AuthValidator

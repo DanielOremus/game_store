@@ -4,18 +4,12 @@ import apiEndpoints from "../../../api/apiEndpoints"
 export default {
   namespaced: true,
   state: () => ({
-    id: null,
-    email: null,
-    firstName: null,
-    lastName: null,
-    role: null,
-    isLoading: false,
-    fullName: null,
+    profilesList: [],
+    currentProfile: null,
   }),
   getters: {
     profile(state) {
-      const { firstName, lastName, email, role, id, fullName } = state
-      return id ? { firstName, lastName, email, role, id, fullName } : null
+      return state.currentProfile
     },
     isLoading(state) {
       return state.isLoading
@@ -25,20 +19,14 @@ export default {
     setLoading(state, status) {
       state.isLoading = status
     },
-    setProfile(state, payload) {
-      const { role, isLoading, ...data } = payload
-      if (role) {
-        state.role = { id: role._id, title: role.title }
-      }
-      for (const key in data) {
-        state[key] = data[key]
-      }
+    setProfile(state, profile) {
+      const { role, ...data } = profile
+
+      data.role = { id: role._id, title: role.title }
+      state.currentProfile = data
     },
     clearProfile(state) {
-      const { isLoading, ...data } = state
-      for (const key in data) {
-        state[key] = null
-      }
+      state.currentProfile = null
     },
   },
   actions: {
@@ -65,6 +53,7 @@ export default {
       console.log(roleId)
 
       const data = { firstName, lastName, userId }
+      //Adding role if has perms
       if (rootGetters["permissions/pagesPermissions"].users.update) {
         data.roleId = roleId
       }
@@ -76,11 +65,17 @@ export default {
         )
         const resData = response.data
         commit("setProfile", resData.data.user)
-        dispatch(
-          "auth/updateAuthData",
-          { fullName: resData.data.user.fullName, id: userId },
-          { root: true }
-        )
+
+        //If current profile belongs to authenticated user
+
+        const authUserId = rootGetters["auth/userId"]
+        if (userId === authUserId) {
+          dispatch(
+            "auth/updateAuthData",
+            { fullName: resData.data.user.fullName, id: userId },
+            { root: true }
+          )
+        }
         console.log(response)
       } catch (error) {
         console.log(error)
@@ -125,6 +120,7 @@ export default {
         throw error
       }
     },
+
     clearProfile({ commit }) {
       commit("clearProfile")
     },

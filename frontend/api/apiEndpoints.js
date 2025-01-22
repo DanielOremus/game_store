@@ -32,11 +32,13 @@ export default Object.freeze({
     fetchGenres: `${API_URI}/genres`,
   },
   user: {
+    fetchUsers: `${API_URI}/users`,
     fetchUserById: (id) => `${API_URI}/users/${id}`,
     updateUserPassword: `${API_URI}/users/update-password`,
     updateProfile: (id) => `${API_URI}/users/update/${id}`,
     generateEmailUpdateLink: `${API_URI}/users/update-email/sendLink`,
     updateEmail: `${API_URI}/users/update-email/confirmation`,
+    deleteUserById: `${API_URI}/users`,
   },
   role: {
     fetchRoles: `${API_URI}/roles`,

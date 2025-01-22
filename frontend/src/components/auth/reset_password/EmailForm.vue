@@ -1,16 +1,16 @@
 <template>
+  <transition name="slide-y-transition">
+    <Alert
+      ref="alertComponent"
+      :type="alert.type"
+      :text="alert.text"
+      :title="alert.title"
+    />
+  </transition>
   <v-card
     elevation="0"
     class="bg-transparent d-flex flex-column justify-center"
   >
-    <transition name="slide-y-transition">
-      <Alert
-        ref="alertComponent"
-        :type="alert.type"
-        :text="alert.text"
-        :title="alert.title"
-      />
-    </transition>
     <v-card-title class="mb-10 text-h4 px-0">Forgot password?</v-card-title>
     <v-card-text class="mb-5 text-h6 px-0 text-grey-lighten-1 flex-grow-0">
       Please enter the address which you used to register. We'll send you an
@@ -20,6 +20,7 @@
     <v-form @submit.prevent="onSend" ref="formElement" v-model="form">
       <v-text-field
         color="orange-darken-3"
+        theme="dark"
         variant="outlined"
         placeholder="Your email"
         :rules="email.rules"
@@ -40,6 +41,28 @@
 </template>
 
 <script>
+const alertData = {
+  200: {
+    type: "success",
+    title: "Success",
+    text: "Email was sent successfully!",
+  },
+  default: {
+    type: "error",
+    title: "Oops",
+    text: "Something went wrong, please try again later",
+  },
+  404: {
+    type: "error",
+    title: "Not found",
+    text: "We couldn't find provided email",
+  },
+  400: {
+    type: "warning",
+    title: "Warning",
+    text: "Please check your email validity and try again",
+  },
+}
 import { mapActions } from "vuex"
 import AuthValidator from "@/validators/AuthValidator"
 import { getFieldValidationFunc } from "@/validators/validationHelpers"
@@ -57,9 +80,9 @@ export default {
         rules: [getFieldValidationFunc(AuthValidator.registerSchema, "email")],
       },
       alert: {
-        type: "success",
-        text: "Letter was sent successfully!",
-        title: "Success",
+        type: "",
+        text: "",
+        title: "",
       },
     }
   },
@@ -70,20 +93,19 @@ export default {
   },
   methods: {
     ...mapActions("auth", ["sendResetLink"]),
-    showAlert() {
-      this.alert = {
-        type: this.alert.type,
-        title: this.alert.title,
-        text: this.alert.text,
-      }
+    showAlert(alertObj) {
+      this.alert = { ...alertObj }
       this.$refs.alertComponent.showAlert()
     },
     async onSend() {
-      //TODO: Add email validator
       try {
         await this.sendResetLink(this.email.value)
-        this.showAlert()
-      } catch (error) {}
+        this.showAlert(alertData[200])
+      } catch (error) {
+        const response = error.response
+        const responseStatus = response?.status
+        this.showAlert(alertData[responseStatus] ?? alertData.default)
+      }
     },
   },
 }
