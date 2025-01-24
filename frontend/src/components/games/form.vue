@@ -215,6 +215,7 @@ export default {
     ...mapActions("platform", ["fetchAllPlatforms"]),
     ...mapActions("genre", ["fetchAllGenres"]),
     ...mapActions("game", ["updateGameById", "createGame"]),
+
     onFileChange(e) {
       const file = e.target.files[0]
       if (file) {

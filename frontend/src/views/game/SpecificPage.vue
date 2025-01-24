@@ -278,6 +278,9 @@ export default {
       document.title = this.game.name
     } catch (error) {}
   },
+  beforeUnmount() {
+    // this.updateCurrentGame(null)
+  },
 }
 </script>
 

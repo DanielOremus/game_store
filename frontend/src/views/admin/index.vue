@@ -58,7 +58,7 @@ const cardsData = [
 ]
 import MainMasterPage from "@/layouts/MainMasterPage.vue"
 import SectionCard from "./sectionCard.vue"
-import { mapGetters } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 export default {
   name: "AdminPage",
   components: {
@@ -66,6 +66,7 @@ export default {
     SectionCard,
   },
   methods: {
+    ...mapActions("game", ["updateCurrentGame"]),
     onCardClick(card) {
       this.$router.push({
         name: card.targetRoute.name,
@@ -84,6 +85,9 @@ export default {
         }
       })
     },
+  },
+  created() {
+    this.updateCurrentGame(null)
   },
 }
 </script>
