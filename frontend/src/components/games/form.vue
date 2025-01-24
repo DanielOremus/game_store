@@ -310,11 +310,11 @@ export default {
         })
       } catch (error) {
         console.log(error)
-
-        const response = error.response
-        switch (response?.statusCode) {
-        }
-        this.$emit("submit", { success: false })
+        const responseStatus = error.response?.status
+        this.$emit("submit-event", {
+          success: false,
+          statusCode: responseStatus,
+        })
       }
     },
     onBack() {

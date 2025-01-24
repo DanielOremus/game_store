@@ -191,7 +191,6 @@
 </template>
 
 <script>
-//TODO: add search with header platforms
 import EpicGamesIcon from "@/assets/icons/epic-games.svg"
 import CartIcon from "@/assets/icons/cart.svg"
 import ProfileIcon from "@/assets/icons/profile.svg"
