@@ -18,7 +18,6 @@ class GameController {
         { genre: 0, gallerySrc: 0, description: 0 },
         ["platform"]
       )
-      console.log(req.query.page)
 
       res.json({
         success: true,
@@ -81,7 +80,6 @@ class GameController {
     const id = req.params.id
     const { name, description, price, sale, genre, platform, releaseDate } =
       req.body
-    console.log(description)
 
     let mainImgSrc = null
     let statusCode = null
@@ -133,9 +131,6 @@ class GameController {
 
   static async updateGalleryByGameId(req, res) {
     const id = req.params.id
-    console.log(req.body)
-    console.log(req.file)
-    console.log(req.files)
 
     const mediaToDelete = JSON.parse(req.body.mediaToDelete) || []
     const mediaObjects = req.files?.map((file) => ({

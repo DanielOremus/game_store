@@ -32,7 +32,6 @@ class GameManager extends MongooseManager {
       const { documents, count } = await super.findMany(null, null, null, [
         "platform",
       ])
-      console.log(documents)
       return {
         documents,
         count,

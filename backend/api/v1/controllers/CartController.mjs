@@ -27,9 +27,6 @@ class CartController {
           .status(404)
           .json({ success: false, msg: "Game by id not found" })
       }
-      console.log("user")
-
-      console.log(req.user._id)
 
       const cart = await CartManager.addItem(userId, gameId)
       res.json({ success: true, data: { cart } })

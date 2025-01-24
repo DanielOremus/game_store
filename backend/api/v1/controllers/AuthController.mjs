@@ -39,7 +39,6 @@ class AuthController {
         { title: "Guest" },
         { _id: 1 }
       )
-      console.log(password)
 
       const user = await UserManager.create({
         email: email.toLowerCase(),

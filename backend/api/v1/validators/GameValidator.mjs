@@ -39,8 +39,6 @@ class GameValidator {
     sale: {
       custom: {
         options: (v) => {
-          console.log(v)
-
           if (isFinite(v) || (v >= 0 && v <= 1)) return true
           throw new Error("Sale must be 0-1")
         },

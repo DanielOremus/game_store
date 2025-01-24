@@ -72,8 +72,6 @@ class MongooseManager {
   }
   async findOne(filters, projection = {}, populateFields = []) {
     try {
-      console.log(populateFields)
-
       const query = this.model.findOne(filters, projection)
       this.addPopulation(query, populateFields)
 

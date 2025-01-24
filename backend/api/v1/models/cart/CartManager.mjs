@@ -30,7 +30,6 @@ class CartManager extends MongooseManager {
         const game = await GameManager.findById(itemId, { platform: 1 }, [
           "platform",
         ])
-        console.log()
 
         cart.games.push({
           game: itemId,

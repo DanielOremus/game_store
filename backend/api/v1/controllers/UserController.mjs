@@ -111,12 +111,10 @@ class UserController {
     try {
       //check if has perm
       let role
-      console.log(req.user.role.pagesPermissions.users)
 
       if (roleId && req.user.role.pagesPermissions.users.update) {
         role = await RoleManager.findById(roleId, { _id: 1 })
       }
-      console.log(role)
 
       const user = await UserManager.updateById(id, {
         firstName,
@@ -211,7 +209,6 @@ class UserController {
 
     try {
       const user = await UserManager.findById(userId)
-      console.log(user)
 
       if (!user) {
         return res
