@@ -4,6 +4,8 @@ import {
   getPermissionChecker,
   getAccountOwnerChecker,
 } from "../../../middlewares/auth.mjs"
+import { checkSchema } from "express-validator"
+import RoleValidator from "../validators/RoleValidator.mjs"
 const checkPermissions = getPermissionChecker("roles")
 const skipCheckIfOwner = getAccountOwnerChecker()
 const router = Router()
@@ -22,12 +24,14 @@ router.get(
 router.post(
   "/",
   checkPermissions("create"),
+  checkSchema(RoleValidator.schema),
   RoleController.createOrUpdateRoleById
 )
 
 router.put(
   "/:id",
   checkPermissions("update"),
+  checkSchema(RoleValidator.schema),
   RoleController.createOrUpdateRoleById
 )
 

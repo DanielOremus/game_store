@@ -61,7 +61,6 @@ export default {
     ...mapGetters("profile", { isProfileLoading: "isLoading" }),
     ...mapGetters("profile", ["profile"]),
     ...mapGetters("permissions", ["pagesPermissions"]),
-    ...mapGetters("role", ["roleList"]),
 
     hasRoleUpdatePerm() {
       return this.pagesPermissions?.users.update

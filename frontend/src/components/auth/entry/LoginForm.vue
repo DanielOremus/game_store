@@ -58,8 +58,8 @@
       <v-row class="mt-1">
         <v-col>
           <span
-            @click="$router.push({ name: 'Register' })"
             class="text-grey-lighten-2 actions"
+            @click="$router.push({ name: 'Register' })"
           >
             Don't have an account?
           </span>

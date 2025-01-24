@@ -31,8 +31,6 @@ export default {
   },
   actions: {
     async fetchProfileById({ commit, rootGetters }, userId) {
-      console.log(userId)
-
       userId = userId ?? rootGetters["auth/userId"]
       commit("setLoading", true)
       try {

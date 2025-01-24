@@ -44,11 +44,10 @@ class RoleController {
     }
   }
   static async createOrUpdateRoleById(req, res) {
-    //TODO: add validation
-    // const errors = validationResult(req)
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ success: false, errors: errors.array() })
-    // }
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() })
+    }
     const id = req.params.id
     const { title, pagesPermissions } = req.body
     let role = null
@@ -75,7 +74,9 @@ class RoleController {
     try {
       const role = await RoleManager.deleteById(id)
       if (!role)
-        res.status(404).json({ success: false, msg: "Role by id not found" })
+        return res
+          .status(404)
+          .json({ success: false, msg: "Role by id not found" })
       res.json({ success: true, msg: "Role was removed successfully" })
     } catch (error) {
       res.status(500).json({ success: false, msg: error.message })

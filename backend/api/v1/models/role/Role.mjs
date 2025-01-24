@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose"
+import UserManager from "../user/UserManager.mjs"
+import RoleManager from "./RoleManager.mjs"
 const permissionsSchema = new Schema({
   create: {
     type: Boolean,
@@ -46,6 +48,12 @@ const roleSchema = new Schema({
   },
 })
 
-//TODO: set guest role when user role is deleted
+roleSchema.post("findOneAndDelete", async function (doc) {
+  const guestRole = await RoleManager.findOne({ title: { $eq: "Guest" } })
+  await UserManager.updateMany(
+    { role: { $eq: doc._id } },
+    { $set: { role: guestRole._id } }
+  )
+})
 
 export default mongoose.model("Role", roleSchema)

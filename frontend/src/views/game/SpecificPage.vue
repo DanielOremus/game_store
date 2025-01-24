@@ -24,22 +24,24 @@
               {{ game.name }}
             </v-card-title>
             <div class="d-flex ga-5">
-              <v-chip
-                class="pl-2"
-                size="x-large"
+              <a
+                :href="platform.url"
+                target="_blank"
                 v-for="platform in game.platform"
               >
-                <img
-                  width="40px"
-                  height="40px"
-                  :src="platform.logo"
-                  alt="platform-logo"
-                  class="pa-1 d-block"
-                />
-                <span>
-                  {{ platform.name }}
-                </span>
-              </v-chip>
+                <v-chip class="pl-2 cursor-pointer" size="x-large">
+                  <img
+                    width="40px"
+                    height="40px"
+                    :src="platform.logo"
+                    alt="platform-logo"
+                    class="pa-1 d-block"
+                  />
+                  <span>
+                    {{ platform.name }}
+                  </span>
+                </v-chip>
+              </a>
             </div>
             <div class="price-container d-flex ga-8">
               <span class="old-price" v-if="game.sale_price !== game.price"
@@ -252,6 +254,7 @@ export default {
     onDelete() {
       this.$refs.deleteDialog.isActive = true
     },
+
     async deleteCallback() {
       try {
         await this.deleteGameById(this.game._id)

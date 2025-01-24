@@ -8,7 +8,7 @@
   <v-card elevation="5" color="grey-darken-3">
     <v-card-title class="text-h5 pb-0">{{ user.fullName }}</v-card-title>
     <v-card-subtitle class="text-subtitle-1">{{
-      user.role.title
+      user.role?.title
     }}</v-card-subtitle>
     <v-card-actions class="d-flex ga-3 mt-10">
       <v-btn class="w-25" variant="flat" color="primary" @click="onEdit"

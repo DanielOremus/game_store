@@ -12,6 +12,10 @@
   --main-text-color: rgb(214, 214, 214);
 }
 
+a {
+  color: inherit;
+}
+
 body {
   font-family: "Noto Sans Display";
   font-optical-sizing: auto;

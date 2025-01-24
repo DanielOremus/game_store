@@ -27,7 +27,6 @@ router.post(
 
 router.post("/logout", ensureAuthenticated, AuthController.logout)
 
-//TODO: Add email validator
 router.post(
   "/reset-password/sendLink",
   checkSchema(AuthValidator.resetLinkSchema),

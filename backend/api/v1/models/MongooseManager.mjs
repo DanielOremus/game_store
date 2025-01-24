@@ -125,6 +125,17 @@ class MongooseManager {
       throw new Error("Error updating item by id: " + error.message)
     }
   }
+  async updateMany(filters = {}, obj) {
+    try {
+      const query = this.model.updateMany(filters, obj, {
+        runValidators: true,
+        new: true,
+      })
+      return await query.exec()
+    } catch (error) {
+      throw new Error("Error updating items: " + error.message)
+    }
+  }
 }
 
 export default MongooseManager

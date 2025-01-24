@@ -9,20 +9,14 @@ class UserValidator {
       },
       custom: {
         options: async (value) => {
-          try {
-            const user = await UserManager.findOne(
-              { email: { $eq: value.toLowerCase() } },
-              { _id: 1 }
-            )
-            if (user) {
-              throw new Error("This email is already taken")
-            }
-            return true
-          } catch (error) {
-            //TODO: add error handler for both cases
-
-            throw error
+          const user = await UserManager.findOne(
+            { email: { $eq: value.toLowerCase() } },
+            { _id: 1 }
+          )
+          if (user) {
+            throw new Error("This email is already taken")
           }
+          return true
         },
       },
       normalizeEmail: true,
@@ -101,19 +95,14 @@ class UserValidator {
       },
       custom: {
         options: async (value) => {
-          try {
-            const isEmailTaken = await UserManager.findOne(
-              { email: { $eq: value.toLowerCase() } },
-              { _id: 1 }
-            )
-            if (isEmailTaken) {
-              throw new Error("This email is already taken")
-            }
-            return true
-          } catch (error) {
-            //TODO: add error handler for both cases
-            throw error
+          const isEmailTaken = await UserManager.findOne(
+            { email: { $eq: value.toLowerCase() } },
+            { _id: 1 }
+          )
+          if (isEmailTaken) {
+            throw new Error("This email is already taken")
           }
+          return true
         },
       },
       normalizeEmail: true,

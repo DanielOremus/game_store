@@ -53,12 +53,8 @@ userSchema.pre("findOneAndUpdate", async function (next) {
 })
 
 userSchema.post("findOneAndDelete", async function (doc) {
-  try {
-    await ResetTokenManager.deleteOne({ userId: doc._id })
-    await CartManager.deleteOne({ userId: doc._id })
-  } catch (error) {
-    console.log(error)
-  }
+  await ResetTokenManager.deleteOne({ userId: doc._id })
+  await CartManager.deleteOne({ userId: doc._id })
 })
 
 userSchema.statics.hashPassword = async function (password, saltRounds = 10) {
