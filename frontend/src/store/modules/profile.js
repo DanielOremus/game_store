@@ -48,7 +48,6 @@ export default {
     },
     async updateProfileById({ commit, rootGetters, dispatch }, payload) {
       const { firstName, lastName, roleId, userId } = payload
-      console.log(roleId)
 
       const data = { firstName, lastName, userId }
       //Adding role if has perms
@@ -74,7 +73,6 @@ export default {
             { root: true }
           )
         }
-        console.log(response)
       } catch (error) {
         console.log(error)
         throw error

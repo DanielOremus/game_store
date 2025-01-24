@@ -131,10 +131,7 @@ export default {
       //const { token, newPassword, confirmPassword } = payload
       try {
         await axios.post(apiEndpoints.auth.resetPassword, payload)
-        console.log("Password was successfully changed")
       } catch (error) {
-        console.log("----err---")
-
         console.log(error)
         throw error
       }

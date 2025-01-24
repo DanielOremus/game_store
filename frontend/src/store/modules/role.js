@@ -84,7 +84,6 @@ export default {
     },
     async updateRoleById({ commit }, payload) {
       const { roleId, roleObj } = payload
-      console.log(roleObj)
 
       try {
         const response = await axios.put(

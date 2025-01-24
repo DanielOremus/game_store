@@ -263,7 +263,6 @@ export default {
   },
   watch: {
     searchValue(newValue) {
-      console.log(1)
       let queryValue = newValue ? newValue : undefined
       this.$router.push({ name: "GamesList", query: { name: queryValue } })
     },

@@ -256,7 +256,6 @@ export default {
       const result = GameValidator.mainSchema.validate(validateData, {
         abortEarly: false,
       })
-      console.log(result)
 
       return result
     },

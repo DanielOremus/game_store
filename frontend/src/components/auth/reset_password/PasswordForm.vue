@@ -167,7 +167,6 @@ export default {
     const { token } = this.$route.params
 
     const resObj = await this.validateResetToken({ token })
-    console.log(resObj)
 
     if (resObj.isTokenValid) {
       this.isTokenValid = true

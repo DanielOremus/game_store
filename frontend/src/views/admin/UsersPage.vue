@@ -18,7 +18,6 @@ export default {
     ...mapActions("user", ["fetchUsers"]),
     onScroll() {
       if (this.isLoading || this.noMoreUsers || !this.isNearToBottom) return
-      console.log(111)
 
       this.fetchUsers({
         query: {

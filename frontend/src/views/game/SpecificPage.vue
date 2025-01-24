@@ -215,8 +215,6 @@ export default {
     ...mapGetters("auth", ["isAuthenticated"]),
 
     gameImages() {
-      console.log(this.pagesPermissions)
-
       return this.game.gallery?.filter((el) => el.mimetype.startsWith("image/"))
     },
     gameVideos() {

@@ -35,8 +35,6 @@ export default {
   },
   methods: {
     submitCallback(e) {
-      console.log(1111)
-
       if (e.success) {
         this.$router.push({ name: "SpecificGame", params: { id: e.id } })
       } else {

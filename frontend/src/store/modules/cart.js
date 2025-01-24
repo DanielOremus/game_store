@@ -39,7 +39,6 @@ export default {
       const gameIndex = state.cart.games.findIndex(
         (item) => item.game._id === gameId
       )
-      console.log(state.cart.games)
 
       if (gameIndex > -1) {
         state.cart.games.splice(gameIndex, 1)
@@ -60,8 +59,6 @@ export default {
       commit("setLoading", true)
       if (!userId) userId = rootGetters["auth/userId"]
       try {
-        console.log(userId)
-
         const response = await axios.get(apiEndpoints.cart.getDetails(userId), {
           withCredentials: true,
         })

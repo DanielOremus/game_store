@@ -71,9 +71,6 @@ export default {
       return this.userPagesPermissions?.roles.create
     },
   },
-  mounted() {
-    console.log(this.roles)
-  },
 }
 </script>
 

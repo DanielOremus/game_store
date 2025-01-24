@@ -47,8 +47,6 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
-    console.log(111)
-
     this.closeAlert()
     next()
   },
