@@ -11,6 +11,8 @@ export default session({
   cookie: {
     httpOnly: true,
     maxAge: 3 * 24 * 3600 * 1000, // 3 days
+    sameSite: "none",
+    secure: true,
   },
   resave: false,
   saveUninitialized: false,

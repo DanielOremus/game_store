@@ -80,6 +80,7 @@ class AuthController {
       req.login(user, (err) => {
         if (err)
           return res.status(500).json({ success: false, msg: err.message })
+        console.log("Headers sent:", res.getHeaders())
         res.json({
           success: true,
           data: {
