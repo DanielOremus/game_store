@@ -31,7 +31,7 @@ export function ensureNotAuthenticated(req, res, next) {
 export const getAccountOwnerChecker = () => (fieldSource, userIdFieldName) => {
   return (req, res, next) => {
     const id = req[fieldSource][userIdFieldName]
-    if (id === req.user._id.toString()) {
+    if (id === req.user?._id.toString()) {
       req.isOwner = true
       req.skipPermissionCheck = true
     }
