@@ -16,7 +16,7 @@
 <script>
 import MainMasterPage from "@/layouts/MainMasterPage.vue"
 import Form from "@/components/games/form.vue"
-import Alert from "@/components/alerts/alert.vue"
+import Alert from "@/components/alerts/Alert.vue"
 export default {
   name: "FormPage",
   components: {
