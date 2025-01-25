@@ -77,6 +77,7 @@ export default {
       if (!this.isNearToWindowBottom()) return
       await this.fetchGames({
         query: {
+          ...this.$route.query,
           page: this.currentPage + 1,
           perPage: this.perPage,
         },

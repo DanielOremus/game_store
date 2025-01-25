@@ -153,8 +153,8 @@
               <v-col
                 cols="12"
                 md="6"
-                lg="4"
-                xl="4"
+                lg="6"
+                xl="6"
                 v-for="imageObj in gameImages"
               >
                 <img :src="`${API_BASE}/${imageObj.src}`" alt="" />
@@ -365,6 +365,7 @@ export default {
   margin-top: 4rem;
   img {
     width: 100%;
+    aspect-ratio: 16/9;
   }
 }
 .gallery-wrapper {
